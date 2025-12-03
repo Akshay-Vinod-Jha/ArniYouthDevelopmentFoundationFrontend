@@ -66,24 +66,24 @@ const About = () => {
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-20">
+      <section className="py-20 dark:bg-gray-900">
         <div className="container">
           <div className="grid md:grid-cols-2 gap-12">
             <div className="animate-fade-in">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
+                <div className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center">
                   <Target className="w-8 h-8 text-primary" />
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900">
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
                   Our Mission
                 </h2>
               </div>
-              <p className="text-lg text-gray-600 mb-4">
+              <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
                 To create sustainable positive change in rural communities
                 through integrated programs in healthcare, education,
                 infrastructure development, and social justice.
               </p>
-              <p className="text-lg text-gray-600">
+              <p className="text-lg text-gray-600 dark:text-gray-300">
                 We aim to empower youth and community members with resources,
                 knowledge, and opportunities to build better futures for
                 themselves and their families.
@@ -92,12 +92,14 @@ const About = () => {
 
             <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-secondary/10 rounded-lg flex items-center justify-center">
+                <div className="w-16 h-16 bg-secondary/10 dark:bg-secondary/20 rounded-lg flex items-center justify-center">
                   <Eye className="w-8 h-8 text-secondary" />
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900">Our Vision</h2>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+                  Our Vision
+                </h2>
               </div>
-              <p className="text-lg text-gray-600 mb-4">
+              <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
                 A thriving, self-sustaining rural community where every
                 individual has access to quality healthcare, education, and
                 opportunities for growth and development.
@@ -113,26 +115,26 @@ const About = () => {
       </section>
 
       {/* Our Story */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container">
           <h2 className="section-title text-center mb-12">Our Story</h2>
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white p-8 rounded-2xl shadow-lg">
-              <p className="text-lg text-gray-600 mb-6">
+            <div className="bg-white dark:bg-gray-700 p-8 rounded-2xl shadow-lg">
+              <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
                 Founded with the spirit of "Matrubhumi" (motherland), Arni Youth
                 Development Foundation was born from a deep commitment to serve
                 rural communities in Tamil Nadu. What started as a small group
                 of dedicated volunteers has grown into a comprehensive
                 organization making a tangible impact across multiple sectors.
               </p>
-              <p className="text-lg text-gray-600 mb-6">
+              <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
                 Our journey began with blood donation camps and has expanded to
                 include medical equipment banks, educational scholarships,
                 infrastructure development, and legal support services. Each
                 program is designed to address real community needs and create
                 lasting positive change.
               </p>
-              <p className="text-lg text-gray-600">
+              <p className="text-lg text-gray-600 dark:text-gray-300">
                 Today, we're proud to have impacted over 10,000 lives through
                 our various initiatives, supported by a network of 500+
                 volunteers and governed by five specialized boards ensuring
@@ -144,23 +146,25 @@ const About = () => {
       </section>
 
       {/* Our Values */}
-      <section className="py-20">
+      <section className="py-20 dark:bg-gray-900">
         <div className="container">
           <h2 className="section-title text-center mb-12">Our Values</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {values.map((value, index) => (
               <div
                 key={index}
-                className="bg-white p-8 rounded-xl shadow-lg text-center animate-fade-in"
+                className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg text-center animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
                   <value.icon className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                   {value.title}
                 </h3>
-                <p className="text-gray-600">{value.description}</p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {value.description}
+                </p>
               </div>
             ))}
           </div>
@@ -168,7 +172,7 @@ const About = () => {
       </section>
 
       {/* Boards */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container">
           <h2 className="section-title text-center mb-4">
             Our Governance Structure
@@ -180,13 +184,15 @@ const About = () => {
             {boards.map((board, index) => (
               <div
                 key={index}
-                className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow animate-fade-in"
+                className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                   {board.name}
                 </h3>
-                <p className="text-gray-600">{board.description}</p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {board.description}
+                </p>
               </div>
             ))}
           </div>
@@ -194,12 +200,12 @@ const About = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20">
+      <section className="py-20 dark:bg-gray-900">
         <div className="container text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
             Be Part of Our Journey
           </h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
             Join us in making a lasting impact on rural communities. Your
             support and involvement can change lives.
           </p>

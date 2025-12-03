@@ -8,6 +8,17 @@ import {
   Users,
   TrendingUp,
   ArrowRight,
+  Syringe,
+  Hospital,
+  Stethoscope,
+  Truck,
+  Award,
+  BookOpen,
+  Recycle,
+  Construction,
+  Home,
+  Gavel,
+  Megaphone,
 } from "lucide-react";
 
 const Programs = () => {
@@ -24,25 +35,25 @@ const Programs = () => {
           name: "Blood Donation Camps",
           description:
             "Regular blood donation camps in collaboration with district blood banks",
-          icon: "🩸",
+          icon: Droplet,
         },
         {
           name: "Medical Equipment Bank",
           description:
             "Establishing and expanding medical equipment bank for needy patients",
-          icon: "🏥",
+          icon: Hospital,
         },
         {
           name: "Health Checkup & Awareness",
           description:
             "Conducting health checkups, cancer awareness camps, and specialist consultations",
-          icon: "⚕️",
+          icon: Stethoscope,
         },
         {
           name: "Multi-City Patient Support",
           description:
             "Providing ambulance, accommodation, and guidance for multi-city medical needs",
-          icon: "🚑",
+          icon: Truck,
         },
       ],
       stats: [
@@ -61,19 +72,19 @@ const Programs = () => {
         {
           name: "Scholarships",
           description: "Offering scholarships to deserving rural students",
-          icon: "🎓",
+          icon: Award,
         },
         {
           name: "Career Guidance",
           description:
             "Subject-based seminars and career guidance sessions in schools",
-          icon: "👨‍🏫",
+          icon: Users,
         },
         {
           name: "School Awareness Sessions",
           description:
             "Building platforms to connect donors, corporates, and students",
-          icon: "📚",
+          icon: BookOpen,
         },
       ],
       stats: [
@@ -93,18 +104,18 @@ const Programs = () => {
           name: "Environment & Cleanliness",
           description:
             "Addressing environmental issues like dumping grounds and cleanliness",
-          icon: "♻️",
+          icon: Recycle,
         },
         {
           name: "Infrastructure Support",
           description: "Working on rural/urban infrastructure improvements",
-          icon: "🏗️",
+          icon: Construction,
         },
         {
           name: "Community Development",
           description:
             "Taking initiatives on local issues affecting community wellbeing",
-          icon: "🏘️",
+          icon: Home,
         },
       ],
       stats: [
@@ -124,13 +135,13 @@ const Programs = () => {
           name: "Legal Guidance",
           description:
             "Providing guidance, motivation, and support to victims seeking justice",
-          icon: "⚖️",
+          icon: Gavel,
         },
         {
           name: "Rights Awareness",
           description:
             "Spreading legal awareness, especially among disadvantaged groups",
-          icon: "📢",
+          icon: Megaphone,
         },
       ],
       stats: [
@@ -163,7 +174,11 @@ const Programs = () => {
       {programs.map((program, index) => (
         <section
           key={program.id}
-          className={`py-20 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+          className={`py-20 ${
+            index % 2 === 0
+              ? "bg-white dark:bg-gray-900"
+              : "bg-gray-50 dark:bg-gray-800"
+          }`}
         >
           <div className="container">
             <div className="mb-12 text-center">
@@ -172,10 +187,10 @@ const Programs = () => {
               >
                 <program.icon className="w-10 h-10" />
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 animate-fade-in">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4 animate-fade-in">
                 {program.title}
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in">
+              <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto animate-fade-in">
                 {program.description}
               </p>
             </div>
@@ -185,13 +200,15 @@ const Programs = () => {
               {program.stats.map((stat, idx) => (
                 <div
                   key={idx}
-                  className="bg-white p-6 rounded-xl shadow-lg text-center animate-fade-in"
+                  className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg text-center animate-fade-in"
                   style={{ animationDelay: `${idx * 0.1}s` }}
                 >
                   <div className="text-3xl font-bold text-primary mb-2">
                     {stat.value}
                   </div>
-                  <div className="text-gray-600">{stat.label}</div>
+                  <div className="text-gray-600 dark:text-gray-300">
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </div>
@@ -201,14 +218,18 @@ const Programs = () => {
               {program.initiatives.map((initiative, idx) => (
                 <div
                   key={idx}
-                  className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all animate-fade-in"
+                  className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all animate-fade-in"
                   style={{ animationDelay: `${idx * 0.1}s` }}
                 >
-                  <div className="text-4xl mb-4">{initiative.icon}</div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 flex items-center justify-center mb-4">
+                    <initiative.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                     {initiative.name}
                   </h3>
-                  <p className="text-gray-600">{initiative.description}</p>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    {initiative.description}
+                  </p>
                 </div>
               ))}
             </div>

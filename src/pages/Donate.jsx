@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Heart, TrendingUp, Users, Check } from "lucide-react";
+import {
+  Heart,
+  TrendingUp,
+  Users,
+  Check,
+  Droplet,
+  GraduationCap,
+  Hospital,
+  Sprout,
+} from "lucide-react";
 
 const Donate = () => {
   const [amount, setAmount] = useState("");
@@ -269,37 +278,55 @@ const Donate = () => {
       </section>
 
       {/* How Funds Are Used */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container">
           <h2 className="section-title text-center mb-12">
             How Your Donation Helps
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-xl shadow-lg text-center">
-              <div className="text-4xl mb-4">🩸</div>
-              <h3 className="font-bold text-gray-900 mb-2">₹500</h3>
-              <p className="text-gray-600 text-sm">
+            <div className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                <Droplet className="w-8 h-8 text-red-600" />
+              </div>
+              <h3 className="font-bold text-gray-900 dark:text-white mb-2">
+                ₹500
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
                 Organizes blood donation camp
               </p>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-lg text-center">
-              <div className="text-4xl mb-4">🎓</div>
-              <h3 className="font-bold text-gray-900 mb-2">₹1,000</h3>
-              <p className="text-gray-600 text-sm">
+            <div className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                <GraduationCap className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="font-bold text-gray-900 dark:text-white mb-2">
+                ₹1,000
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
                 School supplies for 10 students
               </p>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-lg text-center">
-              <div className="text-4xl mb-4">🏥</div>
-              <h3 className="font-bold text-gray-900 mb-2">₹5,000</h3>
-              <p className="text-gray-600 text-sm">
+            <div className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                <Hospital className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="font-bold text-gray-900 dark:text-white mb-2">
+                ₹5,000
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
                 Medical equipment for a family
               </p>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-lg text-center">
-              <div className="text-4xl mb-4">🌱</div>
-              <h3 className="font-bold text-gray-900 mb-2">₹10,000</h3>
-              <p className="text-gray-600 text-sm">Village clean-up drive</p>
+            <div className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                <Sprout className="w-8 h-8 text-emerald-600" />
+              </div>
+              <h3 className="font-bold text-gray-900 dark:text-white mb-2">
+                ₹10,000
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
+                Village clean-up drive
+              </p>
             </div>
           </div>
         </div>
