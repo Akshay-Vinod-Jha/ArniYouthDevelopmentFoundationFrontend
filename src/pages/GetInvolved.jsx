@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Heart, Users, UserPlus, Building2, ArrowRight } from "lucide-react";
+import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 
 const GetInvolved = () => {
   const ways = [
@@ -107,14 +108,19 @@ const GetInvolved = () => {
       </section>
 
       {/* Ways to Get Involved */}
-      <section className="py-20">
+      <section className="py-20 dark:bg-gray-900">
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-8">
             {ways.map((way, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all animate-fade-in"
+                className={`${
+                  index % 2 === 0 ? "reveal-left" : "reveal-right"
+                } reveal-delay-${
+                  index * 100
+                } bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all animate-fade-in`}
                 style={{ animationDelay: `${index * 0.1}s` }}
+                ref={useIntersectionObserver()}
               >
                 <div
                   className={`h-32 bg-gradient-to-br ${way.color} flex items-center justify-center`}
@@ -122,16 +128,20 @@ const GetInvolved = () => {
                   <way.icon className="w-16 h-16 text-white" />
                 </div>
                 <div className="p-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
                     {way.title}
                   </h3>
-                  <p className="text-gray-600 mb-6">{way.description}</p>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6">
+                    {way.description}
+                  </p>
 
                   <div className="space-y-2 mb-6">
                     {way.benefits.map((benefit, idx) => (
                       <div key={idx} className="flex items-start gap-2">
                         <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                        <span className="text-gray-700">{benefit}</span>
+                        <span className="text-gray-700 dark:text-gray-300">
+                          {benefit}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -151,7 +161,7 @@ const GetInvolved = () => {
       </section>
 
       {/* Volunteer Opportunities */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container">
           <h2 className="section-title text-center mb-4">
             Volunteer Opportunities
@@ -163,13 +173,20 @@ const GetInvolved = () => {
             {volunteerOpportunities.map((opp, index) => (
               <div
                 key={index}
-                className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow animate-fade-in"
+                className={`${
+                  index % 2 === 0 ? "reveal-left" : "reveal-right"
+                } reveal-delay-${
+                  index * 100
+                } bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow animate-fade-in`}
                 style={{ animationDelay: `${index * 0.1}s` }}
+                ref={useIntersectionObserver()}
               >
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                   {opp.title}
                 </h3>
-                <p className="text-gray-600 mb-4 text-sm">{opp.description}</p>
+                <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm">
+                  {opp.description}
+                </p>
                 <div className="flex items-center gap-2 text-sm">
                   <span className="px-3 py-1 bg-primary/10 text-primary rounded-full font-medium">
                     {opp.commitment}
@@ -188,40 +205,49 @@ const GetInvolved = () => {
       </section>
 
       {/* Corporate Partnerships */}
-      <section className="py-20">
+      <section className="py-20 dark:bg-gray-900">
         <div className="container">
           <div className="max-w-4xl mx-auto text-center">
             <Building2 className="w-16 h-16 text-primary mx-auto mb-6" />
             <h2 className="section-title mb-6">
               Corporate Social Responsibility
             </h2>
-            <p className="text-lg text-gray-600 mb-8">
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
               Partner with AYDF for meaningful CSR initiatives that create
               lasting impact in rural communities. We offer customized programs
               aligned with your CSR goals.
             </p>
             <div className="grid md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-gray-50 p-6 rounded-xl">
-                <h4 className="font-bold text-gray-900 mb-2">
+              <div
+                className="reveal-left bg-gray-50 dark:bg-gray-800 p-6 rounded-xl"
+                ref={useIntersectionObserver()}
+              >
+                <h4 className="font-bold text-gray-900 dark:text-white mb-2">
                   Employee Engagement
                 </h4>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-600 dark:text-gray-300 text-sm">
                   Volunteer programs and team building activities
                 </p>
               </div>
-              <div className="bg-gray-50 p-6 rounded-xl">
-                <h4 className="font-bold text-gray-900 mb-2">
+              <div
+                className="reveal-scale reveal-delay-100 bg-gray-50 dark:bg-gray-800 p-6 rounded-xl"
+                ref={useIntersectionObserver()}
+              >
+                <h4 className="font-bold text-gray-900 dark:text-white mb-2">
                   Program Sponsorship
                 </h4>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-600 dark:text-gray-300 text-sm">
                   Support specific initiatives aligned with your values
                 </p>
               </div>
-              <div className="bg-gray-50 p-6 rounded-xl">
-                <h4 className="font-bold text-gray-900 mb-2">
+              <div
+                className="reveal-right reveal-delay-200 bg-gray-50 dark:bg-gray-800 p-6 rounded-xl"
+                ref={useIntersectionObserver()}
+              >
+                <h4 className="font-bold text-gray-900 dark:text-white mb-2">
                   Skill Development
                 </h4>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-600 dark:text-gray-300 text-sm">
                   Pro-bono services and expertise sharing
                 </p>
               </div>
@@ -235,32 +261,43 @@ const GetInvolved = () => {
       </section>
 
       {/* Impact of Involvement */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container">
           <h2 className="section-title text-center mb-12">Your Impact</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
+            <div
+              className="reveal-left text-center"
+              ref={useIntersectionObserver()}
+            >
               <div className="text-5xl font-bold text-primary mb-2">₹500</div>
-              <div className="text-gray-900 font-semibold mb-2">
+              <div className="text-gray-900 dark:text-white font-semibold mb-2">
                 Monthly Donation
               </div>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Provides school supplies for 5 students
               </p>
             </div>
-            <div className="text-center">
+            <div
+              className="reveal-scale reveal-delay-100 text-center"
+              ref={useIntersectionObserver()}
+            >
               <div className="text-5xl font-bold text-primary mb-2">8 hrs</div>
-              <div className="text-gray-900 font-semibold mb-2">
+              <div className="text-gray-900 dark:text-white font-semibold mb-2">
                 Volunteering/Month
               </div>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Mentor 10 students in career guidance
               </p>
             </div>
-            <div className="text-center">
+            <div
+              className="reveal-right reveal-delay-200 text-center"
+              ref={useIntersectionObserver()}
+            >
               <div className="text-5xl font-bold text-primary mb-2">1</div>
-              <div className="text-gray-900 font-semibold mb-2">Membership</div>
-              <p className="text-gray-600">
+              <div className="text-gray-900 dark:text-white font-semibold mb-2">
+                Membership
+              </div>
+              <p className="text-gray-600 dark:text-gray-300">
                 Support all programs and shape decisions
               </p>
             </div>
@@ -269,12 +306,12 @@ const GetInvolved = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20">
+      <section className="py-20 dark:bg-gray-900">
         <div className="container text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
             Ready to Make a Difference?
           </h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
             Every action counts. Choose how you want to contribute and start
             your journey with AYDF today.
           </p>

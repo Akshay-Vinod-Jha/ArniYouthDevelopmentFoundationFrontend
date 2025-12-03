@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Target, Eye, Heart, Users, Award, ArrowRight } from "lucide-react";
+import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 
 const About = () => {
   const boards = [
@@ -69,7 +70,10 @@ const About = () => {
       <section className="py-20 dark:bg-gray-900">
         <div className="container">
           <div className="grid md:grid-cols-2 gap-12">
-            <div className="animate-fade-in">
+            <div
+              className="reveal-left animate-fade-in"
+              ref={useIntersectionObserver()}
+            >
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center">
                   <Target className="w-8 h-8 text-primary" />
@@ -90,7 +94,11 @@ const About = () => {
               </p>
             </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
+            <div
+              className="reveal-right reveal-delay-200 animate-fade-in"
+              style={{ animationDelay: "0.2s" }}
+              ref={useIntersectionObserver()}
+            >
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 bg-secondary/10 dark:bg-secondary/20 rounded-lg flex items-center justify-center">
                   <Eye className="w-8 h-8 text-secondary" />
@@ -118,7 +126,10 @@ const About = () => {
       <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container">
           <h2 className="section-title text-center mb-12">Our Story</h2>
-          <div className="max-w-4xl mx-auto">
+          <div
+            className="max-w-4xl mx-auto reveal-scale"
+            ref={useIntersectionObserver()}
+          >
             <div className="bg-white dark:bg-gray-700 p-8 rounded-2xl shadow-lg">
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
                 Founded with the spirit of "Matrubhumi" (motherland), Arni Youth
@@ -153,8 +164,17 @@ const About = () => {
             {values.map((value, index) => (
               <div
                 key={index}
-                className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg text-center animate-fade-in"
+                className={`${
+                  index % 3 === 0
+                    ? "reveal-left"
+                    : index % 3 === 1
+                    ? "reveal-scale"
+                    : "reveal-right"
+                } reveal-delay-${
+                  index * 100
+                } bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg text-center animate-fade-in`}
                 style={{ animationDelay: `${index * 0.1}s` }}
+                ref={useIntersectionObserver()}
               >
                 <div className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
                   <value.icon className="w-8 h-8 text-primary" />
@@ -184,8 +204,13 @@ const About = () => {
             {boards.map((board, index) => (
               <div
                 key={index}
-                className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow animate-fade-in"
+                className={`${
+                  index % 2 === 0 ? "reveal-left" : "reveal-right"
+                } reveal-delay-${
+                  index * 100
+                } bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow animate-fade-in`}
                 style={{ animationDelay: `${index * 0.1}s` }}
+                ref={useIntersectionObserver()}
               >
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                   {board.name}

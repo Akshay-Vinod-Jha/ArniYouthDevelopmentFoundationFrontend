@@ -9,7 +9,7 @@ import {
   TrendingUp,
   ArrowRight,
   Syringe,
-  Hospital,
+  Building2,
   Stethoscope,
   Truck,
   Award,
@@ -20,6 +20,7 @@ import {
   Gavel,
   Megaphone,
 } from "lucide-react";
+import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 
 const Programs = () => {
   const programs = [
@@ -41,7 +42,7 @@ const Programs = () => {
           name: "Medical Equipment Bank",
           description:
             "Establishing and expanding medical equipment bank for needy patients",
-          icon: Hospital,
+          icon: Building2,
         },
         {
           name: "Health Checkup & Awareness",
@@ -200,8 +201,17 @@ const Programs = () => {
               {program.stats.map((stat, idx) => (
                 <div
                   key={idx}
-                  className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg text-center animate-fade-in"
+                  className={`${
+                    idx % 3 === 0
+                      ? "reveal-left"
+                      : idx % 3 === 1
+                      ? "reveal-scale"
+                      : "reveal-right"
+                  } reveal-delay-${
+                    idx * 100
+                  } bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg text-center animate-fade-in`}
                   style={{ animationDelay: `${idx * 0.1}s` }}
+                  ref={useIntersectionObserver()}
                 >
                   <div className="text-3xl font-bold text-primary mb-2">
                     {stat.value}
@@ -218,8 +228,13 @@ const Programs = () => {
               {program.initiatives.map((initiative, idx) => (
                 <div
                   key={idx}
-                  className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all animate-fade-in"
+                  className={`${
+                    idx % 2 === 0 ? "reveal-left" : "reveal-right"
+                  } reveal-delay-${
+                    idx * 100
+                  } bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all animate-fade-in`}
                   style={{ animationDelay: `${idx * 0.1}s` }}
+                  ref={useIntersectionObserver()}
                 >
                   <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 flex items-center justify-center mb-4">
                     <initiative.icon className="w-6 h-6 text-primary" />

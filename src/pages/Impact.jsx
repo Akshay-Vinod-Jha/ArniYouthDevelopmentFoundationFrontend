@@ -6,12 +6,13 @@ import {
   Award,
   MapPin,
   Calendar,
-  Hospital,
+  Building2,
   GraduationCap,
   Sprout,
   User,
   UserCircle,
 } from "lucide-react";
+import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 
 const Impact = () => {
   const impactStats = [
@@ -46,7 +47,7 @@ const Impact = () => {
       title: "Healthcare Access Improved",
       description:
         "Through our medical equipment bank, over 500 families received essential medical equipment including wheelchairs, oxygen cylinders, and hospital beds at no cost.",
-      icon: Hospital,
+      icon: Building2,
       stats: ["500+ Families", "1,200+ Equipment Items", "24/7 Availability"],
     },
     {
@@ -111,8 +112,13 @@ const Impact = () => {
             {impactStats.map((stat, index) => (
               <div
                 key={index}
-                className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow animate-fade-in"
+                className={`${
+                  index % 2 === 0 ? "reveal-left" : "reveal-right"
+                } reveal-delay-${
+                  index * 100
+                } bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow animate-fade-in`}
                 style={{ animationDelay: `${index * 0.1}s` }}
+                ref={useIntersectionObserver()}
               >
                 <stat.icon className={`w-16 h-16 ${stat.color} mx-auto mb-4`} />
                 <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
@@ -135,8 +141,17 @@ const Impact = () => {
             {stories.map((story, index) => (
               <div
                 key={index}
-                className="bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow animate-fade-in"
+                className={`${
+                  index % 3 === 0
+                    ? "reveal-left"
+                    : index % 3 === 1
+                    ? "reveal-scale"
+                    : "reveal-right"
+                } reveal-delay-${
+                  index * 100
+                } bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow animate-fade-in`}
                 style={{ animationDelay: `${index * 0.1}s` }}
+                ref={useIntersectionObserver()}
               >
                 <div className="h-48 bg-gradient-to-br from-primary/20 to-secondary/20 dark:from-primary/30 dark:to-secondary/30 flex items-center justify-center">
                   <story.icon className="w-24 h-24 text-primary" />
@@ -174,8 +189,17 @@ const Impact = () => {
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
-                className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg animate-fade-in"
+                className={`${
+                  index % 3 === 0
+                    ? "reveal-left"
+                    : index % 3 === 1
+                    ? "reveal-scale"
+                    : "reveal-right"
+                } reveal-delay-${
+                  index * 100
+                } bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg animate-fade-in`}
                 style={{ animationDelay: `${index * 0.1}s` }}
+                ref={useIntersectionObserver()}
               >
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 dark:from-primary/30 dark:to-secondary/30 flex items-center justify-center mb-4">
                   <testimonial.icon className="w-8 h-8 text-primary" />
@@ -201,7 +225,10 @@ const Impact = () => {
       <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container">
           <h2 className="section-title text-center mb-12">Where We Work</h2>
-          <div className="max-w-4xl mx-auto">
+          <div
+            className="max-w-4xl mx-auto reveal-scale"
+            ref={useIntersectionObserver()}
+          >
             <div className="bg-white dark:bg-gray-700 p-8 rounded-xl shadow-lg">
               <div className="flex items-start gap-4 mb-6">
                 <MapPin className="w-8 h-8 text-primary flex-shrink-0" />

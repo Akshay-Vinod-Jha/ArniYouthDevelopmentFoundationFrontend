@@ -11,6 +11,7 @@ import {
   Building,
   Scale,
 } from "lucide-react";
+import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 
 const Home = () => {
   const stats = [
@@ -85,20 +86,25 @@ const Home = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 dark:bg-gray-800">
         <div className="container">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div
                 key={index}
-                className="text-center animate-fade-in"
+                className={`${
+                  index % 2 === 0 ? "reveal-left" : "reveal-right"
+                } reveal-delay-${index * 100} text-center animate-fade-in`}
                 style={{ animationDelay: `${index * 0.1}s` }}
+                ref={useIntersectionObserver()}
               >
                 <stat.icon className="w-12 h-12 text-primary mx-auto mb-4" />
-                <div className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                <div className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
                   {stat.value}
                 </div>
-                <div className="text-gray-600">{stat.label}</div>
+                <div className="text-gray-600 dark:text-gray-300">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
@@ -106,12 +112,15 @@ const Home = () => {
       </section>
 
       {/* About Preview */}
-      <section className="py-20">
+      <section className="py-20 dark:bg-gray-900">
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="animate-fade-in">
+            <div
+              className="reveal-left animate-fade-in"
+              ref={useIntersectionObserver()}
+            >
               <h2 className="section-title">Who We Are</h2>
-              <p className="text-lg text-gray-600 mb-6">
+              <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
                 Arni Youth Development Foundation (AYDF) is a dedicated
                 organization working towards the holistic development of rural
                 communities in Tamil Nadu. Founded with a vision of "Matrubhumi"
@@ -129,8 +138,9 @@ const Home = () => {
               </Link>
             </div>
             <div
-              className="relative animate-fade-in"
+              className="reveal-right reveal-delay-200 relative animate-fade-in"
               style={{ animationDelay: "0.2s" }}
+              ref={useIntersectionObserver()}
             >
               <div className="aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl flex items-center justify-center">
                 <Heart className="w-32 h-32 text-primary/30" />
@@ -141,7 +151,7 @@ const Home = () => {
       </section>
 
       {/* Programs Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container">
           <div className="text-center mb-12">
             <h2 className="section-title">Our Programs</h2>
@@ -153,18 +163,25 @@ const Home = () => {
             {programs.map((program, index) => (
               <div
                 key={index}
-                className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow animate-fade-in"
+                className={`${
+                  index % 2 === 0 ? "reveal-left" : "reveal-right"
+                } reveal-delay-${
+                  index * 100
+                } bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow animate-fade-in`}
                 style={{ animationDelay: `${index * 0.1}s` }}
+                ref={useIntersectionObserver()}
               >
                 <div
-                  className={`w-16 h-16 rounded-lg ${program.color} flex items-center justify-center mb-4`}
+                  className={`w-16 h-16 rounded-lg ${program.color} dark:opacity-90 flex items-center justify-center mb-4`}
                 >
                   <program.icon className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                   {program.title}
                 </h3>
-                <p className="text-gray-600 mb-4">{program.description}</p>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  {program.description}
+                </p>
                 <Link
                   to="/programs"
                   className="text-primary font-medium hover:underline inline-flex items-center gap-1"
