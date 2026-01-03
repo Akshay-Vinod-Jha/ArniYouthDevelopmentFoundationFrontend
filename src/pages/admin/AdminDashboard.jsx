@@ -100,8 +100,10 @@ const AdminDashboard = () => {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading dashboard...</p>
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-600 dark:text-gray-400">
+            Loading dashboard...
+          </p>
         </div>
       </div>
     );
@@ -111,8 +113,10 @@ const AdminDashboard = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-1">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          Dashboard
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">
           Welcome back! Here's what's happening today.
         </p>
       </div>
@@ -190,9 +194,11 @@ const AdminDashboard = () => {
       </div>
 
       {/* System Info */}
-      <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border border-green-200 p-6">
-        <h3 className="font-semibold text-gray-900 mb-2">System Status</h3>
-        <p className="text-sm text-gray-600">
+      <div className="bg-gradient-to-r from-orange-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-xl border border-primary/20 dark:border-gray-600 p-6">
+        <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+          System Status
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400">
           All systems operational. Last backup: Today at 3:00 AM
         </p>
       </div>

@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAdmin } from "../../context/AdminContext";
-import { Lock, Mail, Shield } from "lucide-react";
+import { Lock, Mail, Shield, Sun, Moon } from "lucide-react";
+import { useTheme } from "../../context/ThemeContext";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
   const { login } = useAdmin();
+  const { theme, toggleTheme } = useTheme();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -37,19 +39,36 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
+      {/* Dark Mode Toggle */}
+      <button
+        onClick={toggleTheme}
+        className="fixed top-4 right-4 p-3 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50"
+        aria-label="Toggle theme"
+      >
+        {theme === "dark" ? (
+          <Sun className="w-5 h-5 text-yellow-500" />
+        ) : (
+          <Moon className="w-5 h-5 text-gray-700" />
+        )}
+      </button>
+
       <div className="w-full max-w-md">
         {/* Logo/Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-600 text-white rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-600 dark:bg-green-500 text-white rounded-full mb-4">
             <Shield className="w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Login</h1>
-          <p className="text-gray-600">Arni Youth Development Foundation</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Admin Login
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Arni Youth Development Foundation
+          </p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
           {error && (
             <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
               <p className="text-sm">{error}</p>
@@ -59,7 +78,7 @@ const AdminLogin = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Email Address
               </label>
               <div className="relative">
@@ -69,7 +88,7 @@ const AdminLogin = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                  className="w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
                   placeholder="aydfowner@admin.com"
                   required
                 />
@@ -78,7 +97,7 @@ const AdminLogin = () => {
 
             {/* Password Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Password
               </label>
               <div className="relative">
@@ -88,7 +107,7 @@ const AdminLogin = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                  className="w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
                   placeholder="••••••••"
                   required
                 />
@@ -99,7 +118,7 @@ const AdminLogin = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
@@ -116,8 +135,8 @@ const AdminLogin = () => {
           </form>
 
           {/* Credentials Info */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <p className="text-xs text-gray-600 text-center">
+          <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+            <p className="text-xs text-gray-600 dark:text-gray-400 text-center">
               🔐 Admin credentials are pre-configured
             </p>
           </div>
@@ -126,7 +145,7 @@ const AdminLogin = () => {
           <div className="mt-6 text-center">
             <Link
               to="/"
-              className="text-sm text-green-600 hover:text-green-700 font-medium"
+              className="text-sm text-primary hover:text-primary/80 font-medium"
             >
               ← Back to Homepage
             </Link>
@@ -134,7 +153,7 @@ const AdminLogin = () => {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-500 mt-8">
+        <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-8">
           © 2024 AYDF. All rights reserved.
         </p>
       </div>

@@ -14,6 +14,91 @@ const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Import all images from aydf_gallery folder
+  const importImages = () => {
+    const imageFiles = [
+      "IMG-20251224-WA0003.jpg",
+      "IMG-20251224-WA0004.jpg",
+      "IMG-20251224-WA0005(1).jpg",
+      "IMG-20251224-WA0005.jpg",
+      "IMG-20251224-WA0006.jpg",
+      "IMG-20251224-WA0007.jpg",
+      "IMG-20251224-WA0008.jpg",
+      "IMG-20251224-WA0009.jpg",
+      "IMG-20251224-WA0010.jpg",
+      "IMG-20251224-WA0011.jpg",
+      "SAVE_20260101_200110.jpg",
+      "SAVE_20260101_200115.jpg",
+      "SAVE_20260101_200122.jpg",
+      "SAVE_20260101_200127.jpg",
+      "SAVE_20260101_200133.jpg",
+      "SAVE_20260101_200138.jpg",
+      "SAVE_20260101_200144.jpg",
+      "SAVE_20260101_200149.jpg",
+      "SAVE_20260101_200154.jpg",
+      "SAVE_20260101_200159.jpg",
+      "SAVE_20260101_200204.jpg",
+      "SAVE_20260101_200210.jpg",
+      "SAVE_20260101_200214.jpg",
+      "SAVE_20260101_200218.jpg",
+      "SAVE_20260101_200224.jpg",
+      "SAVE_20260101_200229.jpg",
+      "SAVE_20260101_200234.jpg",
+      "SAVE_20260101_200239.jpg",
+      "SAVE_20260101_200243.jpg",
+      "SAVE_20260101_200249.jpg",
+      "SAVE_20260101_200257.jpg",
+      "SAVE_20260101_200302.jpg",
+      "SAVE_20260101_200307.jpg",
+      "SAVE_20260101_200312.jpg",
+      "SAVE_20260101_200317.jpg",
+      "SAVE_20260101_200322.jpg",
+      "SAVE_20260101_200327.jpg",
+      "SAVE_20260101_200333.jpg",
+      "SAVE_20260101_200339.jpg",
+      "SAVE_20260101_200344.jpg",
+      "SAVE_20260101_200350.jpg",
+      "SAVE_20260101_200355.jpg",
+      "SAVE_20260101_200359.jpg",
+      "SAVE_20260101_200404.jpg",
+      "SAVE_20260101_200409.jpg",
+      "SAVE_20260101_200414.jpg",
+      "SAVE_20260101_200419.jpg",
+      "SAVE_20260101_200423.jpg",
+      "SAVE_20260101_200428.jpg",
+      "SAVE_20260101_200433.jpg",
+      "SAVE_20260101_200437.jpg",
+      "SAVE_20260101_200442.jpg",
+      "SAVE_20260101_200447.jpg",
+      "SAVE_20260101_200452.jpg",
+      "SAVE_20260101_200457.jpg",
+      "SAVE_20260101_200503.jpg",
+      "SAVE_20260101_200508.jpg",
+      "SAVE_20260101_200513.jpg",
+      "SAVE_20260101_200517.jpg",
+      "SAVE_20260101_200523.jpg",
+    ];
+
+    // Map images to gallery items with rotating categories
+    const programs = [
+      "Healthcare",
+      "Education",
+      "Rural Development",
+      "Events",
+      "Community",
+    ];
+
+    return imageFiles.map((filename, index) => ({
+      id: index + 1,
+      url: `/aydf_gallery/${filename}`,
+      title: `AYDF Activity ${index + 1}`,
+      program: programs[index % programs.length],
+      date: "2024-2025",
+    }));
+  };
+
+  const images = importImages();
+
   const categories = [
     "All",
     "Healthcare",
@@ -23,7 +108,7 @@ const Gallery = () => {
     "Community",
   ];
 
-  const images = [
+  const images_old = [
     {
       id: 1,
       url: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800",

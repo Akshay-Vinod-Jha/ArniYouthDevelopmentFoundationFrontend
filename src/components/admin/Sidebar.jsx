@@ -67,9 +67,9 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-64 bg-gray-900 text-white min-h-screen flex flex-col">
+    <div className="w-64 bg-gray-900 dark:bg-gray-950 text-white min-h-screen flex flex-col border-r border-gray-800 dark:border-gray-700">
       {/* Logo */}
-      <div className="p-6 border-b border-gray-800">
+      <div className="p-6 border-b border-gray-800 dark:border-gray-700">
         <h1 className="text-xl font-bold">AYDF Admin</h1>
         <p className="text-sm text-gray-400 mt-1">Management Panel</p>
       </div>
@@ -85,8 +85,8 @@ const Sidebar = () => {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                   isActive
-                    ? "bg-green-600 text-white"
-                    : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                    ? "bg-primary text-white"
+                    : "text-gray-300 hover:bg-gray-800 dark:hover:bg-gray-800 hover:text-white"
                 }`
               }
             >
