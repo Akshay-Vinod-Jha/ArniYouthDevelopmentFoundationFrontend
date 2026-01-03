@@ -2,13 +2,26 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "../../components/admin/DataTable";
 import FormModal from "../../components/admin/FormModal";
-import { Eye, Edit, Trash2, Plus, Upload, X } from "lucide-react";
+import {
+  Eye,
+  Edit,
+  Trash2,
+  Plus,
+  Upload,
+  X,
+  Search,
+  Filter,
+} from "lucide-react";
 
 const BlogManagement = () => {
   const [blogs, setBlogs] = useState([]);
+  const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingBlog, setEditingBlog] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [publishedFilter, setPublishedFilter] = useState("all");
   const [formData, setFormData] = useState({
     title: "",
     excerpt: "",
@@ -33,6 +46,7 @@ const BlogManagement = () => {
       setLoading(true);
       const response = await axios.get(`${API_URL}/blog/admin/all`);
       setBlogs(response.data.blogs || []);
+      setFilteredBlogs(response.data.blogs || []);
     } catch (error) {
       console.error("Error fetching blogs:", error);
       alert("Failed to fetch blogs");
@@ -40,6 +54,35 @@ const BlogManagement = () => {
       setLoading(false);
     }
   };
+
+  // Filter blogs
+  useEffect(() => {
+    let filtered = [...blogs];
+
+    // Category filter
+    if (categoryFilter !== "all") {
+      filtered = filtered.filter((b) => b.category === categoryFilter);
+    }
+
+    // Published filter
+    if (publishedFilter !== "all") {
+      filtered = filtered.filter(
+        (b) => b.published === (publishedFilter === "published")
+      );
+    }
+
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (b) =>
+          b.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          b.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          b.author?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredBlogs(filtered);
+  }, [blogs, categoryFilter, publishedFilter, searchQuery]);
 
   const handleOpenModal = (blog = null) => {
     if (blog) {
@@ -237,9 +280,92 @@ const BlogManagement = () => {
         </button>
       </div>
 
+      {/* Filter Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Filter className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            Filters
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Search Input */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Search
+            </label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by title, excerpt, or author..."
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
+          </div>
+
+          {/* Category Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Category
+            </label>
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="all">All Categories</option>
+              <option value="impact">Impact</option>
+              <option value="youth">Youth</option>
+              <option value="rural">Rural</option>
+              <option value="women">Women</option>
+              <option value="technology">Technology</option>
+              <option value="training">Training</option>
+              <option value="awareness">Awareness</option>
+            </select>
+          </div>
+
+          {/* Published Status Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Status
+            </label>
+            <select
+              value={publishedFilter}
+              onChange={(e) => setPublishedFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="all">All</option>
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Clear Filters and Results Count */}
+        <div className="mt-4 flex items-center justify-between">
+          <button
+            onClick={() => {
+              setSearchQuery("");
+              setCategoryFilter("all");
+              setPublishedFilter("all");
+            }}
+            className="text-sm text-primary hover:text-primary/80 font-medium"
+          >
+            Clear Filters
+          </button>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Showing {filteredBlogs.length} of {blogs.length} posts
+          </p>
+        </div>
+      </div>
+
       <DataTable
         columns={columns}
-        data={blogs}
+        data={filteredBlogs}
         loading={loading}
         emptyMessage="No blogs found"
       />

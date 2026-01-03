@@ -16,6 +16,8 @@ import {
 const Blog = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedTag, setSelectedTag] = useState("All");
+  const [sortBy, setSortBy] = useState("latest");
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
 
@@ -27,6 +29,17 @@ const Blog = () => {
     "Success Stories",
     "Community",
     "Announcements",
+  ];
+
+  const tags = [
+    "All",
+    "Impact",
+    "Youth",
+    "Rural",
+    "Women",
+    "Technology",
+    "Training",
+    "Awareness",
   ];
 
   const blogPosts = [

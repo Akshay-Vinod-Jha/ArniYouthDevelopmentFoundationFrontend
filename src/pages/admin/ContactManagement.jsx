@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "../../components/admin/DataTable";
-import { Eye, Trash2, CheckCircle } from "lucide-react";
+import { Eye, Trash2, CheckCircle, Search, Filter } from "lucide-react";
 import Modal from "../../components/ui/Modal";
 
 const ContactManagement = () => {
   const [contacts, setContacts] = useState([]);
+  const [filteredContacts, setFilteredContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("");
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -24,12 +28,45 @@ const ContactManagement = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setContacts(response.data.contacts || []);
+      setFilteredContacts(response.data.contacts || []);
     } catch (error) {
       console.error("Error fetching contacts:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  // Filter contacts
+  useEffect(() => {
+    let filtered = [...contacts];
+
+    // Status filter
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((c) => c.status === statusFilter);
+    }
+
+    // Date filter
+    if (dateFilter) {
+      const filterDate = new Date(dateFilter);
+      filtered = filtered.filter((c) => {
+        const contactDate = new Date(c.createdAt);
+        return contactDate.toDateString() === filterDate.toDateString();
+      });
+    }
+
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (c) =>
+          c.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          c.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          c.phone?.includes(searchQuery) ||
+          c.subject?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredContacts(filtered);
+  }, [contacts, statusFilter, dateFilter, searchQuery]);
 
   const handleMarkAsRead = async (id) => {
     try {
@@ -149,9 +186,84 @@ const ContactManagement = () => {
         </div>
       </div>
 
+      {/* Filter Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Filter className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            Filters
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Search Input */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Search
+            </label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by name, email, phone, or subject..."
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
+          </div>
+
+          {/* Status Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Status
+            </label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="all">All</option>
+              <option value="new">New</option>
+              <option value="read">Read</option>
+            </select>
+          </div>
+
+          {/* Date Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Date
+            </label>
+            <input
+              type="date"
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            />
+          </div>
+        </div>
+
+        {/* Clear Filters and Results Count */}
+        <div className="mt-4 flex items-center justify-between">
+          <button
+            onClick={() => {
+              setSearchQuery("");
+              setStatusFilter("all");
+              setDateFilter("");
+            }}
+            className="text-sm text-primary hover:text-primary/80 font-medium"
+          >
+            Clear Filters
+          </button>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Showing {filteredContacts.length} of {contacts.length} contacts
+          </p>
+        </div>
+      </div>
+
       <DataTable
         columns={columns}
-        data={contacts}
+        data={filteredContacts}
         loading={loading}
         emptyMessage="No contact messages found"
       />

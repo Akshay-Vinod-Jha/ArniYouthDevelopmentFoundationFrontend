@@ -7,12 +7,14 @@ import {
   ChevronLeft,
   ChevronRight,
   Filter,
+  Search,
 } from "lucide-react";
 
 const Gallery = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Import all images from aydf_gallery folder
   const importImages = () => {
@@ -279,10 +281,19 @@ const Gallery = () => {
     },
   ];
 
-  const filteredImages =
-    selectedCategory === "All"
-      ? images
-      : images.filter((img) => img.program === selectedCategory);
+  const filteredImages = images.filter((img) => {
+    // Category filter
+    const matchesCategory =
+      selectedCategory === "All" || img.program === selectedCategory;
+
+    // Search filter
+    const matchesSearch =
+      !searchQuery ||
+      img.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      img.program.toLowerCase().includes(searchQuery.toLowerCase());
+
+    return matchesCategory && matchesSearch;
+  });
 
   const openLightbox = (image, index) => {
     setSelectedImage(image);
@@ -330,6 +341,21 @@ const Gallery = () => {
       {/* Filter Section */}
       <section className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 shadow-md">
         <div className="container mx-auto px-4 py-6">
+          {/* Search Bar */}
+          <div className="max-w-md mx-auto mb-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search gallery images..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
+          </div>
+
+          {/* Category Filters */}
           <div className="flex items-center gap-4 justify-center flex-wrap">
             <Filter className="w-5 h-5 text-gray-600 dark:text-gray-400" />
             {categories.map((category) => (
@@ -345,6 +371,24 @@ const Gallery = () => {
                 {category}
               </button>
             ))}
+          </div>
+
+          {/* Results Count */}
+          <div className="text-center mt-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Showing {filteredImages.length} of {images.length} images
+              {(searchQuery || selectedCategory !== "All") && (
+                <button
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedCategory("All");
+                  }}
+                  className="ml-4 text-primary hover:text-primary/80 font-medium"
+                >
+                  Clear Filters
+                </button>
+              )}
+            </p>
           </div>
         </div>
       </section>

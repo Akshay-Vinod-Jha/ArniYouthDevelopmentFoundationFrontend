@@ -1,12 +1,21 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Trash2, Image as ImageIcon, Upload } from "lucide-react";
+import {
+  Trash2,
+  Image as ImageIcon,
+  Upload,
+  Search,
+  Filter,
+} from "lucide-react";
 
 const ImageLibrary = () => {
   const [images, setImages] = useState([]);
+  const [filteredImages, setFilteredImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const [uploadData, setUploadData] = useState({
     title: "",
     description: "",
@@ -28,12 +37,34 @@ const ImageLibrary = () => {
         params: { limit: 100 },
       });
       setImages(response.data.items || []);
+      setFilteredImages(response.data.items || []);
     } catch (error) {
       console.error("Error fetching images:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  // Filter images
+  useEffect(() => {
+    let filtered = [...images];
+
+    // Category filter
+    if (categoryFilter !== "all") {
+      filtered = filtered.filter((img) => img.category === categoryFilter);
+    }
+
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (img) =>
+          img.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          img.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredImages(filtered);
+  }, [images, categoryFilter, searchQuery]);
 
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
@@ -198,19 +229,90 @@ const ImageLibrary = () => {
 
       {/* Image Grid */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-          Image Gallery ({images.length})
-        </h2>
-        {images.length === 0 ? (
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            Image Gallery ({filteredImages.length})
+          </h2>
+        </div>
+
+        {/* Filter Section */}
+        <div className="mb-6 bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-4">
+            <Filter className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Filters
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Search Input */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Search
+              </label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by title or description..."
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                />
+              </div>
+            </div>
+
+            {/* Category Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Category
+              </label>
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              >
+                <option value="all">All Categories</option>
+                <option value="events">Events</option>
+                <option value="activities">Activities</option>
+                <option value="healthcare">Healthcare</option>
+                <option value="education">Education</option>
+                <option value="community">Community</option>
+                <option value="general">General</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Clear Filters and Results Count */}
+          <div className="mt-4 flex items-center justify-between">
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                setCategoryFilter("all");
+              }}
+              className="text-sm text-primary hover:text-primary/80 font-medium"
+            >
+              Clear Filters
+            </button>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Showing {filteredImages.length} of {images.length} images
+            </p>
+          </div>
+        </div>
+
+        {filteredImages.length === 0 ? (
           <div className="text-center py-12">
             <ImageIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-600 dark:text-gray-400">
-              No images found in library
+              No images found{" "}
+              {searchQuery || categoryFilter !== "all"
+                ? "matching your filters"
+                : "in library"}
             </p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {images.map((image) => (
+            {filteredImages.map((image) => (
               <div
                 key={image._id}
                 className="group relative bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden aspect-square"

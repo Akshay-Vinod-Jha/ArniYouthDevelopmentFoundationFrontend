@@ -2,12 +2,16 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "../../components/admin/DataTable";
 import FormModal from "../../components/admin/FormModal";
-import { Edit, Trash2, Plus, Upload, X } from "lucide-react";
+import { Edit, Trash2, Plus, Upload, X, Search, Filter } from "lucide-react";
 
 const GalleryManagement = () => {
   const [items, setItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [featuredFilter, setFeaturedFilter] = useState("all");
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -32,6 +36,7 @@ const GalleryManagement = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setItems(response.data.items || []);
+      setFilteredItems(response.data.items || []);
     } catch (error) {
       console.error("Error fetching gallery items:", error);
       alert("Failed to fetch gallery items");
@@ -39,6 +44,34 @@ const GalleryManagement = () => {
       setLoading(false);
     }
   };
+
+  // Filter gallery items
+  useEffect(() => {
+    let filtered = [...items];
+
+    // Category filter
+    if (categoryFilter !== "all") {
+      filtered = filtered.filter((i) => i.category === categoryFilter);
+    }
+
+    // Featured filter
+    if (featuredFilter !== "all") {
+      filtered = filtered.filter(
+        (i) => i.featured === (featuredFilter === "featured")
+      );
+    }
+
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (i) =>
+          i.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          i.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredItems(filtered);
+  }, [items, categoryFilter, featuredFilter, searchQuery]);
 
   const handleOpenModal = () => {
     setFormData({
@@ -195,9 +228,90 @@ const GalleryManagement = () => {
         </button>
       </div>
 
+      {/* Filter Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Filter className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            Filters
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Search Input */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Search
+            </label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by title or description..."
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
+          </div>
+
+          {/* Category Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Category
+            </label>
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="all">All Categories</option>
+              <option value="events">Events</option>
+              <option value="programs">Programs</option>
+              <option value="success-stories">Success Stories</option>
+              <option value="team">Team</option>
+              <option value="infrastructure">Infrastructure</option>
+            </select>
+          </div>
+
+          {/* Featured Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Featured
+            </label>
+            <select
+              value={featuredFilter}
+              onChange={(e) => setFeaturedFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="all">All</option>
+              <option value="featured">Featured Only</option>
+              <option value="not-featured">Not Featured</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Clear Filters and Results Count */}
+        <div className="mt-4 flex items-center justify-between">
+          <button
+            onClick={() => {
+              setSearchQuery("");
+              setCategoryFilter("all");
+              setFeaturedFilter("all");
+            }}
+            className="text-sm text-primary hover:text-primary/80 font-medium"
+          >
+            Clear Filters
+          </button>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Showing {filteredItems.length} of {items.length} items
+          </p>
+        </div>
+      </div>
+
       <DataTable
         columns={columns}
-        data={items}
+        data={filteredItems}
         loading={loading}
         emptyMessage="No gallery items found"
       />

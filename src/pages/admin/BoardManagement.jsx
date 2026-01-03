@@ -2,13 +2,17 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "../../components/admin/DataTable";
 import FormModal from "../../components/admin/FormModal";
-import { Edit, Trash2, Plus, Upload, X } from "lucide-react";
+import { Edit, Trash2, Plus, Upload, X, Search, Filter } from "lucide-react";
 
 const BoardManagement = () => {
   const [members, setMembers] = useState([]);
+  const [filteredMembers, setFilteredMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [boardTypeFilter, setBoardTypeFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [formData, setFormData] = useState({
     name: "",
     position: "",
@@ -37,6 +41,7 @@ const BoardManagement = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMembers(response.data.boardMembers || []);
+      setFilteredMembers(response.data.boardMembers || []);
     } catch (error) {
       console.error("Error fetching board members:", error);
       alert("Failed to fetch board members");
@@ -44,6 +49,35 @@ const BoardManagement = () => {
       setLoading(false);
     }
   };
+
+  // Filter members
+  useEffect(() => {
+    let filtered = [...members];
+
+    // Board type filter
+    if (boardTypeFilter !== "all") {
+      filtered = filtered.filter((m) => m.boardType === boardTypeFilter);
+    }
+
+    // Status filter
+    if (statusFilter !== "all") {
+      filtered = filtered.filter(
+        (m) => m.isActive === (statusFilter === "active")
+      );
+    }
+
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (m) =>
+          m.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          m.position?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          m.email?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredMembers(filtered);
+  }, [members, boardTypeFilter, statusFilter, searchQuery]);
 
   const handleOpenModal = (member = null) => {
     if (member) {
@@ -236,9 +270,84 @@ const BoardManagement = () => {
         </button>
       </div>
 
+      {/* Filters */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Filter className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            Filters & Search
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Search
+            </label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by name, position, email..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Board Type
+            </label>
+            <select
+              value={boardTypeFilter}
+              onChange={(e) => setBoardTypeFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="all">All Types</option>
+              <option value="advisory">Advisory Board</option>
+              <option value="executive">Executive Board</option>
+              <option value="management">Management Team</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Status
+            </label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div className="mt-4 flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+          <span>
+            Showing {filteredMembers.length} of {members.length} members
+          </span>
+          {(searchQuery ||
+            boardTypeFilter !== "all" ||
+            statusFilter !== "all") && (
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                setBoardTypeFilter("all");
+                setStatusFilter("all");
+              }}
+              className="text-[#FF6B35] hover:text-[#ff5722] font-medium"
+            >
+              Clear Filters
+            </button>
+          )}
+        </div>
+      </div>
+
       <DataTable
         columns={columns}
-        data={members}
+        data={filteredMembers}
         loading={loading}
         emptyMessage="No board members found"
       />

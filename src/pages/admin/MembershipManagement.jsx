@@ -1,14 +1,25 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "../../components/admin/DataTable";
-import { Eye, Trash2, CheckCircle, XCircle } from "lucide-react";
+import {
+  Eye,
+  Trash2,
+  CheckCircle,
+  XCircle,
+  Search,
+  Filter,
+} from "lucide-react";
 import Modal from "../../components/ui/Modal";
 
 const MembershipManagement = () => {
   const [members, setMembers] = useState([]);
+  const [filteredMembers, setFilteredMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [planFilter, setPlanFilter] = useState("all");
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -24,12 +35,44 @@ const MembershipManagement = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMembers(response.data.members || []);
+      setFilteredMembers(response.data.members || []);
     } catch (error) {
       console.error("Error fetching members:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  // Filter members
+  useEffect(() => {
+    let filtered = [...members];
+
+    // Status filter
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((m) => {
+        if (statusFilter === "active") return m.isActive;
+        if (statusFilter === "inactive") return !m.isActive;
+        return true;
+      });
+    }
+
+    // Plan filter
+    if (planFilter !== "all") {
+      filtered = filtered.filter((m) => m.membershipPlan === planFilter);
+    }
+
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (m) =>
+          m.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          m.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          m.phone?.includes(searchQuery)
+      );
+    }
+
+    setFilteredMembers(filtered);
+  }, [members, statusFilter, planFilter, searchQuery]);
 
   const handleToggleStatus = async (id, currentStatus) => {
     const action = currentStatus ? "deactivate" : "activate";
@@ -185,9 +228,88 @@ const MembershipManagement = () => {
         </div>
       </div>
 
+      {/* Filter Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Filter className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            Filters
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Search Input */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Search
+            </label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by name, email, or phone..."
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
+          </div>
+
+          {/* Membership Plan Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Plan
+            </label>
+            <select
+              value={planFilter}
+              onChange={(e) => setPlanFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="all">All Plans</option>
+              <option value="basic">Basic</option>
+              <option value="standard">Standard</option>
+              <option value="premium">Premium</option>
+            </select>
+          </div>
+
+          {/* Status Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Status
+            </label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="all">All</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Clear Filters and Results Count */}
+        <div className="mt-4 flex items-center justify-between">
+          <button
+            onClick={() => {
+              setSearchQuery("");
+              setPlanFilter("all");
+              setStatusFilter("all");
+            }}
+            className="text-sm text-primary hover:text-primary/80 font-medium"
+          >
+            Clear Filters
+          </button>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Showing {filteredMembers.length} of {members.length} members
+          </p>
+        </div>
+      </div>
+
       <DataTable
         columns={columns}
-        data={members}
+        data={filteredMembers}
         loading={loading}
         emptyMessage="No members found"
       />

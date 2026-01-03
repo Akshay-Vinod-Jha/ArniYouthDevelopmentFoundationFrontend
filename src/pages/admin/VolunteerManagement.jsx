@@ -1,14 +1,25 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "../../components/admin/DataTable";
-import { CheckCircle, XCircle, Trash2, Eye } from "lucide-react";
+import {
+  CheckCircle,
+  XCircle,
+  Trash2,
+  Eye,
+  Search,
+  Filter,
+} from "lucide-react";
 import Modal from "../../components/ui/Modal";
 
 const VolunteerManagement = () => {
   const [volunteers, setVolunteers] = useState([]);
+  const [filteredVolunteers, setFilteredVolunteers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedVolunteer, setSelectedVolunteer] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("");
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -24,12 +35,44 @@ const VolunteerManagement = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setVolunteers(response.data.volunteers || []);
+      setFilteredVolunteers(response.data.volunteers || []);
     } catch (error) {
       console.error("Error fetching volunteers:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  // Filter volunteers
+  useEffect(() => {
+    let filtered = [...volunteers];
+
+    // Status filter
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((v) => v.status === statusFilter);
+    }
+
+    // Date filter
+    if (dateFilter) {
+      filtered = filtered.filter((v) => {
+        const appDate = new Date(v.appliedAt || v.createdAt);
+        const filterDate = new Date(dateFilter);
+        return appDate >= filterDate;
+      });
+    }
+
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (v) =>
+          v.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          v.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          v.phone?.includes(searchQuery)
+      );
+    }
+
+    setFilteredVolunteers(filtered);
+  }, [volunteers, statusFilter, dateFilter, searchQuery]);
 
   const handleApprove = async (id) => {
     if (
@@ -180,9 +223,80 @@ const VolunteerManagement = () => {
         </div>
       </div>
 
+      {/* Filters */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Filter className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            Filters & Search
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Search
+            </label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by name, email, phone..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Status
+            </label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="all">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Applied After
+            </label>
+            <input
+              type="date"
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            />
+          </div>
+        </div>
+        <div className="mt-4 flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+          <span>
+            Showing {filteredVolunteers.length} of {volunteers.length}{" "}
+            volunteers
+          </span>
+          {(searchQuery || statusFilter !== "all" || dateFilter) && (
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                setStatusFilter("all");
+                setDateFilter("");
+              }}
+              className="text-[#FF6B35] hover:text-[#ff5722] font-medium"
+            >
+              Clear Filters
+            </button>
+          )}
+        </div>
+      </div>
+
       <DataTable
         columns={columns}
-        data={volunteers}
+        data={filteredVolunteers}
         loading={loading}
         emptyMessage="No volunteers found"
       />
