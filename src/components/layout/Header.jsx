@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Heart, Sun, Moon } from "lucide-react";
+import { Menu, X, Heart, Sun, Moon, Shield } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 
 const Header = () => {
@@ -63,6 +63,14 @@ const Header = () => {
                 <Sun className="w-5 h-5 text-gray-300" />
               )}
             </button>
+            <Link
+              to="/admin/login"
+              className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg transition-colors"
+              title="Admin Panel"
+            >
+              <Shield className="w-4 h-4" />
+              <span className="text-sm font-medium">Admin</span>
+            </Link>
             <Link to="/donate" className="btn btn-primary">
               Donate Now
             </Link>
@@ -104,6 +112,14 @@ const Header = () => {
                 {item.name}
               </Link>
             ))}
+            <Link
+              to="/admin/login"
+              onClick={() => setIsMenuOpen(false)}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg transition-colors w-full justify-center mt-4"
+            >
+              <Shield className="w-4 h-4" />
+              <span className="text-sm font-medium">Admin Login</span>
+            </Link>
             <Link
               to="/donate"
               onClick={() => setIsMenuOpen(false)}

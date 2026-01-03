@@ -101,7 +101,12 @@ const Donate = () => {
       const API_URL =
         import.meta.env.VITE_API_URL || "http://localhost:5000/api";
       const { data } = await axios.post(`${API_URL}/donations/create`, {
-        donor: donorInfo,
+        donor: {
+          name: donorInfo.name,
+          email: donorInfo.email,
+          phone: donorInfo.phone,
+          panNumber: donorInfo.panNumber || undefined,
+        },
         amount: finalAmount,
         program: donorInfo.program,
         isAnonymous: donorInfo.isAnonymous,

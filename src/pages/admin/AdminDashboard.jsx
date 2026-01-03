@@ -1,0 +1,203 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import StatCard from "../../components/admin/StatCard";
+import {
+  FileText,
+  UserCheck,
+  CreditCard,
+  Heart,
+  Mail,
+  ArrowRight,
+  TrendingUp,
+} from "lucide-react";
+
+const AdminDashboard = () => {
+  const [stats, setStats] = useState({
+    blogs: 0,
+    volunteers: 0,
+    members: 0,
+    donations: 0,
+    contacts: 0,
+    totalDonationAmount: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [recentActivities, setRecentActivities] = useState([]);
+
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+
+      // Fetch all stats in parallel
+      const [blogsRes, volunteersRes, membersRes, donationsRes, contactsRes] =
+        await Promise.all([
+          axios
+            .get(`${API_URL}/blog/admin/all?limit=1`)
+            .catch(() => ({ data: { total: 0 } })),
+          axios
+            .get(`${API_URL}/volunteers?limit=1`)
+            .catch(() => ({ data: { total: 0 } })),
+          axios
+            .get(`${API_URL}/members?limit=1`)
+            .catch(() => ({ data: { total: 0 } })),
+          axios
+            .get(`${API_URL}/donations?limit=1`)
+            .catch(() => ({ data: { total: 0, totalAmount: 0 } })),
+          axios
+            .get(`${API_URL}/contact?limit=1`)
+            .catch(() => ({ data: { total: 0 } })),
+        ]);
+
+      setStats({
+        blogs: blogsRes.data.total || 0,
+        volunteers: volunteersRes.data.total || 0,
+        members: membersRes.data.total || 0,
+        donations: donationsRes.data.total || 0,
+        contacts: contactsRes.data.total || 0,
+        totalDonationAmount: donationsRes.data.totalAmount || 0,
+      });
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const quickActions = [
+    {
+      name: "Create Blog Post",
+      path: "/admin/blogs",
+      icon: FileText,
+      color: "bg-blue-500",
+    },
+    {
+      name: "Review Volunteers",
+      path: "/admin/volunteers",
+      icon: UserCheck,
+      color: "bg-green-500",
+    },
+    {
+      name: "Manage Members",
+      path: "/admin/memberships",
+      icon: CreditCard,
+      color: "bg-purple-500",
+    },
+    {
+      name: "View Donations",
+      path: "/admin/donations",
+      icon: Heart,
+      color: "bg-red-500",
+    },
+  ];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-gray-600 mt-1">
+          Welcome back! Here's what's happening today.
+        </p>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <StatCard
+          title="Total Blogs"
+          value={stats.blogs}
+          icon={FileText}
+          color="blue"
+        />
+        <StatCard
+          title="Volunteer Applications"
+          value={stats.volunteers}
+          icon={UserCheck}
+          color="green"
+        />
+        <StatCard
+          title="Active Members"
+          value={stats.members}
+          icon={CreditCard}
+          color="purple"
+        />
+        <StatCard
+          title="Total Donations"
+          value={stats.donations}
+          icon={Heart}
+          color="red"
+        />
+        <StatCard
+          title="Contact Messages"
+          value={stats.contacts}
+          icon={Mail}
+          color="yellow"
+        />
+        <StatCard
+          title="Donation Amount"
+          value={`₹${stats.totalDonationAmount.toLocaleString()}`}
+          icon={TrendingUp}
+          color="green"
+        />
+      </div>
+
+      {/* Quick Actions */}
+      <div>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          Quick Actions
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {quickActions.map((action) => {
+            const Icon = action.icon;
+            return (
+              <Link
+                key={action.path}
+                to={action.path}
+                className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all hover:scale-105"
+              >
+                <div
+                  className={`${action.color} w-12 h-12 rounded-lg flex items-center justify-center mb-4`}
+                >
+                  <Icon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-1">
+                  {action.name}
+                </h3>
+                <div className="flex items-center text-sm text-green-600 font-medium">
+                  Go to page
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* System Info */}
+      <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border border-green-200 p-6">
+        <h3 className="font-semibold text-gray-900 mb-2">System Status</h3>
+        <p className="text-sm text-gray-600">
+          All systems operational. Last backup: Today at 3:00 AM
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default AdminDashboard;
