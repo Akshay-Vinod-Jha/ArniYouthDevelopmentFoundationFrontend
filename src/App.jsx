@@ -32,7 +32,6 @@ import VolunteerManagement from "./pages/admin/VolunteerManagement";
 import MembershipManagement from "./pages/admin/MembershipManagement";
 import ContactManagement from "./pages/admin/ContactManagement";
 import DonationManagement from "./pages/admin/DonationManagement";
-import ImageLibrary from "./pages/admin/ImageLibrary";
 
 function App() {
   return (
@@ -53,7 +52,6 @@ function App() {
               <Route path="memberships" element={<MembershipManagement />} />
               <Route path="contacts" element={<ContactManagement />} />
               <Route path="donations" element={<DonationManagement />} />
-              <Route path="library" element={<ImageLibrary />} />
             </Route>
 
             {/* Public Routes */}

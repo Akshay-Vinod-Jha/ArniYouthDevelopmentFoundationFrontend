@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import {
   BookOpen,
   Calendar,
@@ -13,22 +13,27 @@ import {
   TrendingUp,
 } from "lucide-react";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 const Blog = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedTag, setSelectedTag] = useState("All");
   const [sortBy, setSortBy] = useState("latest");
   const [currentPage, setCurrentPage] = useState(1);
+  const [dynamicBlogs, setDynamicBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const postsPerPage = 6;
 
   const categories = [
     "All",
     "Healthcare",
     "Education",
+    "Development",
+    "Justice",
     "Events",
-    "Success Stories",
-    "Community",
-    "Announcements",
+    "Success Story",
+    "General",
   ];
 
   const tags = [
@@ -199,13 +204,62 @@ const Blog = () => {
     },
   ];
 
+  // Fetch dynamic blogs from database
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/blog/published`);
+        setDynamicBlogs(response.data.blogs || []);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBlogs();
+  }, []);
+
+  // Combine dynamic blogs with static blogs (dynamic first)
+  const allBlogs = [
+    ...dynamicBlogs.map((blog) => ({
+      id: blog._id,
+      title: blog.title,
+      excerpt: blog.excerpt,
+      author: blog.author?.name || "AYDF Team",
+      date: new Date(blog.publishedAt || blog.createdAt).toLocaleDateString(
+        "en-US",
+        { year: "numeric", month: "long", day: "numeric" }
+      ),
+      category: blog.category
+        ? blog.category === "success-story"
+          ? "Success Story"
+          : blog.category.charAt(0).toUpperCase() + blog.category.slice(1)
+        : "General",
+      image:
+        blog.featuredImage?.url ||
+        blog.featuredImage ||
+        "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800",
+      readTime: `${Math.ceil(
+        (blog.content?.split(" ").length || 0) / 200
+      )} min read`,
+      featured: false,
+      tags: blog.tags || [],
+    })),
+    ...blogPosts,
+  ];
+
   // Filter posts based on search and category
-  const filteredPosts = blogPosts.filter((post) => {
+  const filteredPosts = allBlogs.filter((post) => {
     const matchesSearch =
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory =
-      selectedCategory === "All" || post.category === selectedCategory;
+      selectedCategory === "All" ||
+      post.category.toLowerCase() === selectedCategory.toLowerCase() ||
+      (selectedCategory === "Success Story" &&
+        post.category.toLowerCase() === "success-story") ||
+      (selectedCategory === "Success Stories" &&
+        post.category.toLowerCase() === "success-story");
     return matchesSearch && matchesCategory;
   });
 
@@ -215,7 +269,7 @@ const Blog = () => {
   const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
-  const featuredPost = blogPosts.find((post) => post.featured);
+  const featuredPost = allBlogs.find((post) => post.featured);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -262,7 +316,9 @@ const Blog = () => {
               {categories.map((category) => (
                 <button
                   key={category}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     setSelectedCategory(category);
                     setCurrentPage(1);
                   }}
@@ -283,10 +339,7 @@ const Blog = () => {
       {/* Featured Post */}
       {featuredPost && selectedCategory === "All" && !searchQuery && (
         <section className="bg-white dark:bg-gray-800 py-12">
-          <div
-            className="container mx-auto px-4 reveal"
-            ref={useIntersectionObserver()}
-          >
+          <div className="container mx-auto px-4">
             <div className="flex items-center gap-2 mb-6">
               <TrendingUp className="w-6 h-6 text-primary" />
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -368,11 +421,15 @@ const Blog = () => {
 
       {/* Blog Grid */}
       <section className="py-16">
-        <div
-          className="container mx-auto px-4 reveal"
-          ref={useIntersectionObserver()}
-        >
-          {currentPosts.length > 0 ? (
+        <div className="container mx-auto px-4">
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary mx-auto mb-4"></div>
+              <p className="text-gray-600 dark:text-gray-400 text-lg">
+                Loading blogs...
+              </p>
+            </div>
+          ) : currentPosts.length > 0 ? (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {currentPosts.map((post, index) => (
@@ -381,12 +438,7 @@ const Blog = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className={`${
-                      index % 2 === 0 ? "reveal-left" : "reveal-right"
-                    } reveal-delay-${
-                      index * 100
-                    } bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 group`}
-                    ref={useIntersectionObserver()}
+                    className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 group"
                   >
                     <div className="relative h-48 overflow-hidden">
                       <img
@@ -446,9 +498,11 @@ const Blog = () => {
               {totalPages > 1 && (
                 <div className="flex justify-center items-center gap-2 mt-12">
                   <button
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.max(prev - 1, 1))
-                    }
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setCurrentPage((prev) => Math.max(prev - 1, 1));
+                    }}
                     disabled={currentPage === 1}
                     className="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
@@ -458,7 +512,11 @@ const Blog = () => {
                   {[...Array(totalPages)].map((_, index) => (
                     <button
                       key={index}
-                      onClick={() => setCurrentPage(index + 1)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setCurrentPage(index + 1);
+                      }}
                       className={`px-4 py-2 rounded-lg transition-colors ${
                         currentPage === index + 1
                           ? "bg-primary text-white"
@@ -470,9 +528,11 @@ const Blog = () => {
                   ))}
 
                   <button
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                    }
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+                    }}
                     disabled={currentPage === totalPages}
                     className="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
@@ -482,14 +542,35 @@ const Blog = () => {
               )}
             </>
           ) : (
-            <div className="text-center py-12">
-              <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                No articles found
+            <div className="text-center py-16">
+              <BookOpen className="w-20 h-20 text-gray-400 mx-auto mb-6" />
+              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
+                No blogs found
               </h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Try adjusting your search or filter criteria
+              <p className="text-gray-600 dark:text-gray-400 mb-2">
+                {selectedCategory !== "All"
+                  ? `No blogs available for "${selectedCategory}" category`
+                  : searchQuery
+                  ? `No blogs match your search "${searchQuery}"`
+                  : "No blogs available at the moment"}
               </p>
+              <p className="text-gray-500 dark:text-gray-500 text-sm">
+                Try selecting a different category or adjusting your search
+              </p>
+              {(selectedCategory !== "All" || searchQuery) && (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setSelectedCategory("All");
+                    setSearchQuery("");
+                    setCurrentPage(1);
+                  }}
+                  className="mt-6 px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                >
+                  Clear Filters
+                </button>
+              )}
             </div>
           )}
         </div>

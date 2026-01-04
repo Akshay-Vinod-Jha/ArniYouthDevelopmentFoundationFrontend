@@ -146,7 +146,10 @@ const ContactManagement = () => {
       render: (row) => (
         <div className="flex gap-2">
           <button
-            onClick={() => handleViewDetails(row)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleViewDetails(row);
+            }}
             className="p-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded"
             title="View Details"
           >
@@ -154,7 +157,10 @@ const ContactManagement = () => {
           </button>
           {row.status === "new" && (
             <button
-              onClick={() => handleMarkAsRead(row._id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleMarkAsRead(row._id);
+              }}
               className="p-2 hover:bg-green-50 dark:hover:bg-green-900/20 rounded"
               title="Mark as Read"
             >
@@ -162,7 +168,10 @@ const ContactManagement = () => {
             </button>
           )}
           <button
-            onClick={() => handleDelete(row._id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(row._id);
+            }}
             className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
             title="Delete"
           >

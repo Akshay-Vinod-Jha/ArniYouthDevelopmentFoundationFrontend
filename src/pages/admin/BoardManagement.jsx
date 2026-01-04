@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "../../components/admin/DataTable";
 import FormModal from "../../components/admin/FormModal";
+import Modal from "../../components/ui/Modal";
 import { Edit, Trash2, Plus, Upload, X, Search, Filter } from "lucide-react";
 
 const BoardManagement = () => {
@@ -13,13 +14,15 @@ const BoardManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [boardTypeFilter, setBoardTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
-    position: "",
+    position: "member",
     bio: "",
-    boardType: "advisory",
+    boardType: "health",
     email: "",
-    linkedin: "",
+    linkedIn: "",
     image: null,
     order: 0,
     isActive: true,
@@ -88,7 +91,7 @@ const BoardManagement = () => {
         bio: member.bio || "",
         boardType: member.boardType,
         email: member.email || "",
-        linkedin: member.linkedin || "",
+        linkedIn: member.linkedIn || "",
         image: null,
         order: member.order,
         isActive: member.isActive,
@@ -98,11 +101,11 @@ const BoardManagement = () => {
       setEditingMember(null);
       setFormData({
         name: "",
-        position: "",
+        position: "member",
         bio: "",
-        boardType: "advisory",
+        boardType: "health",
         email: "",
-        linkedin: "",
+        linkedIn: "",
         image: null,
         order: members.length + 1,
         isActive: true,
@@ -157,7 +160,7 @@ const BoardManagement = () => {
             },
           }
         );
-        alert("Board member updated successfully!");
+        setSuccessMessage("Board member updated successfully!");
       } else {
         await axios.post(`${API_URL}/board`, formDataToSend, {
           headers: {
@@ -165,10 +168,11 @@ const BoardManagement = () => {
             "Content-Type": "multipart/form-data",
           },
         });
-        alert("Board member added successfully!");
+        setSuccessMessage("Board member added successfully!");
       }
 
       handleCloseModal();
+      setShowSuccessModal(true);
       fetchMembers();
     } catch (error) {
       console.error("Error saving board member:", error);
@@ -378,14 +382,18 @@ const BoardManagement = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Position *
               </label>
-              <input
-                type="text"
+              <select
                 name="position"
                 value={formData.position}
                 onChange={handleInputChange}
                 required
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-              />
+              >
+                <option value="president">President</option>
+                <option value="secretary">Secretary</option>
+                <option value="supervisor">Supervisor</option>
+                <option value="member">Member</option>
+              </select>
             </div>
           </div>
 
@@ -414,9 +422,11 @@ const BoardManagement = () => {
                 required
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               >
-                <option value="advisory">Advisory Board</option>
-                <option value="executive">Executive Board</option>
-                <option value="management">Management Team</option>
+                <option value="health">Health Board</option>
+                <option value="education">Education Board</option>
+                <option value="city-development">City Development</option>
+                <option value="social-justice">Social Justice</option>
+                <option value="outreach">Outreach</option>
               </select>
             </div>
 
@@ -454,8 +464,8 @@ const BoardManagement = () => {
               </label>
               <input
                 type="url"
-                name="linkedin"
-                value={formData.linkedin}
+                name="linkedIn"
+                value={formData.linkedIn}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
@@ -536,6 +546,15 @@ const BoardManagement = () => {
           </div>
         </form>
       </FormModal>
+
+      {/* Success Modal */}
+      <Modal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title="Success"
+        message={successMessage}
+        type="success"
+      />
     </div>
   );
 };

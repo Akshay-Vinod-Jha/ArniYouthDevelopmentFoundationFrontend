@@ -14,6 +14,7 @@ import {
   Briefcase,
   Target,
 } from "lucide-react";
+import axios from "axios";
 import Modal from "../components/ui/Modal";
 
 const VolunteerPage = () => {
@@ -42,12 +43,15 @@ const VolunteerPage = () => {
     resume: null,
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [modal, setModal] = useState({
     isOpen: false,
     type: "success",
     title: "",
     message: "",
   });
+
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
   const opportunities = [
     {
@@ -138,12 +142,27 @@ const VolunteerPage = () => {
   };
 
   const handleCheckboxChange = (category, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [category]: prev[category].includes(value)
-        ? prev[category].filter((item) => item !== value)
-        : [...prev[category], value],
-    }));
+    // Handle nested paths like "availability.days"
+    if (category.includes(".")) {
+      const [parent, child] = category.split(".");
+      setFormData((prev) => ({
+        ...prev,
+        [parent]: {
+          ...prev[parent],
+          [child]: prev[parent][child].includes(value)
+            ? prev[parent][child].filter((item) => item !== value)
+            : [...prev[parent][child], value],
+        },
+      }));
+    } else {
+      // Handle top-level arrays like "skills", "programs"
+      setFormData((prev) => ({
+        ...prev,
+        [category]: prev[category].includes(value)
+          ? prev[category].filter((item) => item !== value)
+          : [...prev[category], value],
+      }));
+    }
   };
 
   const handleFileChange = (e) => {
@@ -163,33 +182,91 @@ const VolunteerPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    // Simulate submission
-    const applicationId = `VOL${Date.now()}`;
+    try {
+      // Create FormData for file upload
+      const submitData = new FormData();
 
-    showModal(
-      "success",
-      "🎉 Application Received!",
-      `Thank you ${formData.personalInfo.name}!\n\nYour volunteer application has been successfully submitted.\n\nApplication ID: ${applicationId}\n\nOur team will review your application and contact you within 5-7 business days via email at ${formData.personalInfo.email}.\n\nWelcome to the AYDF volunteer community!`
-    );
+      // Add personal info
+      submitData.append("name", formData.personalInfo.name);
+      submitData.append("email", formData.personalInfo.email);
+      submitData.append("phone", formData.personalInfo.phone);
+      submitData.append("dateOfBirth", formData.personalInfo.dateOfBirth);
+      submitData.append("occupation", formData.personalInfo.occupation);
 
-    // Reset form
-    setFormData({
-      personalInfo: {
-        name: "",
-        email: "",
-        phone: "",
-        dateOfBirth: "",
-        address: { line1: "", city: "", state: "", pincode: "" },
-        occupation: "",
-      },
-      availability: { days: [], hoursPerWeek: "" },
-      skills: [],
-      programs: [],
-      experience: "",
-      motivation: "",
-      resume: null,
-    });
+      // Add address as JSON
+      submitData.append(
+        "address",
+        JSON.stringify({
+          city: formData.personalInfo.address.city,
+          state: formData.personalInfo.address.state,
+        })
+      );
+
+      // Add availability as JSON
+      submitData.append("availability", JSON.stringify(formData.availability));
+
+      // Add arrays as JSON
+      submitData.append("skills", JSON.stringify(formData.skills));
+      submitData.append("programs", JSON.stringify(formData.programs));
+
+      // Add text fields
+      submitData.append("experience", formData.experience);
+      submitData.append("motivation", formData.motivation);
+
+      // Add resume file if exists
+      if (formData.resume) {
+        submitData.append("resume", formData.resume);
+      }
+
+      console.log("Submitting volunteer application...");
+      const response = await axios.post(
+        `${API_URL}/volunteers/apply`,
+        submitData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("Application submitted:", response.data);
+
+      showModal(
+        "success",
+        "🎉 Application Received!",
+        `Thank you ${formData.personalInfo.name}!\n\nYour volunteer application has been successfully submitted.\n\nApplication ID: ${response.data.volunteer.id}\n\nOur team will review your application and contact you within 5-7 business days via email at ${formData.personalInfo.email}.\n\nWelcome to the AYDF volunteer community!`
+      );
+
+      // Reset form
+      setFormData({
+        personalInfo: {
+          name: "",
+          email: "",
+          phone: "",
+          dateOfBirth: "",
+          address: { line1: "", city: "", state: "", pincode: "" },
+          occupation: "",
+        },
+        availability: { days: [], hoursPerWeek: "" },
+        skills: [],
+        programs: [],
+        experience: "",
+        motivation: "",
+        resume: null,
+      });
+    } catch (error) {
+      console.error("Volunteer application error:", error);
+      showModal(
+        "error",
+        "Submission Failed",
+        error.response?.data?.message ||
+          "Failed to submit application. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -552,10 +629,11 @@ const VolunteerPage = () => {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-primary to-secondary text-white py-4 rounded-lg font-semibold hover:from-primary/90 hover:to-secondary/90 transition-all duration-300 flex items-center justify-center gap-2"
+                disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-primary to-secondary text-white py-4 rounded-lg font-semibold hover:from-primary/90 hover:to-secondary/90 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Heart className="w-5 h-5" />
-                Submit Application
+                {isSubmitting ? "Submitting..." : "Submit Application"}
               </button>
 
               <p className="text-sm text-gray-600 dark:text-gray-400 text-center">

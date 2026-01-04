@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "../../components/admin/DataTable";
 import FormModal from "../../components/admin/FormModal";
+import Modal from "../../components/ui/Modal";
 import { Edit, Trash2, Plus, Upload, X, Search, Filter } from "lucide-react";
 
 const GalleryManagement = () => {
@@ -21,6 +22,8 @@ const GalleryManagement = () => {
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
   const token = localStorage.getItem("adminToken");
@@ -135,7 +138,8 @@ const GalleryManagement = () => {
         },
       });
 
-      alert("Gallery item uploaded successfully!");
+      setSuccessMessage("Gallery item uploaded successfully!");
+      setShowSuccessModal(true);
       handleCloseModal();
       fetchItems();
     } catch (error) {
@@ -153,7 +157,8 @@ const GalleryManagement = () => {
       await axios.delete(`${API_URL}/gallery/admin/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      alert("Gallery item deleted successfully!");
+      setSuccessMessage("Gallery item deleted successfully!");
+      setShowSuccessModal(true);
       fetchItems();
     } catch (error) {
       console.error("Error deleting item:", error);
@@ -443,6 +448,14 @@ const GalleryManagement = () => {
           </div>
         </form>
       </FormModal>
+
+      {/* Success Modal */}
+      <Modal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        type="success"
+        message={successMessage}
+      />
     </div>
   );
 };

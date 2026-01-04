@@ -75,67 +75,97 @@ const VolunteerManagement = () => {
   }, [volunteers, statusFilter, dateFilter, searchQuery]);
 
   const handleApprove = async (id) => {
+    console.log("Approve clicked:", id);
     if (
       !confirm("Are you sure you want to approve this volunteer application?")
-    )
+    ) {
+      console.log("User cancelled approve");
       return;
+    }
 
     try {
       const token = localStorage.getItem("adminToken");
-      await axios.put(
+      console.log("Sending approve request...");
+      const response = await axios.put(
         `${API_URL}/volunteers/${id}/approve`,
         { notes: "Approved by admin" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      console.log("Approve response:", response.data);
       alert("Volunteer application approved successfully!");
       fetchVolunteers();
     } catch (error) {
       console.error("Error approving volunteer:", error);
-      alert("Failed to approve volunteer application");
+      console.error("Error details:", error.response?.data);
+      alert(
+        error.response?.data?.message ||
+          "Failed to approve volunteer application"
+      );
     }
   };
 
   const handleReject = async (id) => {
-    if (!confirm("Are you sure you want to reject this volunteer application?"))
+    console.log("Reject clicked:", id);
+    if (
+      !confirm("Are you sure you want to reject this volunteer application?")
+    ) {
+      console.log("User cancelled reject");
       return;
+    }
 
     try {
       const token = localStorage.getItem("adminToken");
-      await axios.put(
+      console.log("Sending reject request...");
+      const response = await axios.put(
         `${API_URL}/volunteers/${id}/reject`,
         { notes: "Rejected by admin" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      console.log("Reject response:", response.data);
       alert("Volunteer application rejected");
       fetchVolunteers();
     } catch (error) {
       console.error("Error rejecting volunteer:", error);
-      alert("Failed to reject volunteer application");
+      console.error("Error details:", error.response?.data);
+      alert(
+        error.response?.data?.message ||
+          "Failed to reject volunteer application"
+      );
     }
   };
 
   const handleDelete = async (id) => {
+    console.log("Delete clicked:", id);
     if (
       !confirm(
         "Are you sure you want to delete this volunteer application? This cannot be undone."
       )
-    )
+    ) {
+      console.log("User cancelled delete");
       return;
+    }
 
     try {
       const token = localStorage.getItem("adminToken");
-      await axios.delete(`${API_URL}/volunteers/admin/${id}`, {
+      console.log("Sending delete request...");
+      const response = await axios.delete(`${API_URL}/volunteers/admin/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log("Delete response:", response.data);
       alert("Volunteer application deleted successfully!");
       fetchVolunteers();
     } catch (error) {
       console.error("Error deleting volunteer:", error);
-      alert("Failed to delete volunteer application");
+      console.error("Error details:", error.response?.data);
+      alert(
+        error.response?.data?.message ||
+          "Failed to delete volunteer application"
+      );
     }
   };
 
   const handleViewDetails = (volunteer) => {
+    console.log("View details clicked:", volunteer);
     setSelectedVolunteer(volunteer);
     setShowDetailModal(true);
   };
@@ -174,7 +204,10 @@ const VolunteerManagement = () => {
       render: (row) => (
         <div className="flex gap-2">
           <button
-            onClick={() => handleViewDetails(row)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleViewDetails(row);
+            }}
             className="p-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded"
             title="View Details"
           >
@@ -183,14 +216,20 @@ const VolunteerManagement = () => {
           {row.status === "pending" && (
             <>
               <button
-                onClick={() => handleApprove(row._id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleApprove(row._id);
+                }}
                 className="p-2 hover:bg-green-50 dark:hover:bg-green-900/20 rounded"
                 title="Approve"
               >
                 <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
               </button>
               <button
-                onClick={() => handleReject(row._id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleReject(row._id);
+                }}
                 className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
                 title="Reject"
               >
@@ -199,7 +238,10 @@ const VolunteerManagement = () => {
             </>
           )}
           <button
-            onClick={() => handleDelete(row._id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(row._id);
+            }}
             className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
             title="Delete"
           >

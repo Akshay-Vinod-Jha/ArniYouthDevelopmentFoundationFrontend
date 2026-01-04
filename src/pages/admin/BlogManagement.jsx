@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "../../components/admin/DataTable";
 import FormModal from "../../components/admin/FormModal";
+import Modal from "../../components/ui/Modal";
 import {
   Eye,
   Edit,
@@ -22,6 +23,8 @@ const BlogManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [publishedFilter, setPublishedFilter] = useState("all");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [formData, setFormData] = useState({
     title: "",
     excerpt: "",
@@ -154,11 +157,20 @@ const BlogManagement = () => {
       formDataToSend.append("excerpt", formData.excerpt);
       formDataToSend.append("content", formData.content);
       formDataToSend.append("category", formData.category);
-      formDataToSend.append("tags", formData.tags);
+
+      // Parse tags from comma-separated string to array
+      const tagsArray = formData.tags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag !== "");
+      tagsArray.forEach((tag) => {
+        formDataToSend.append("tags[]", tag);
+      });
+
       formDataToSend.append("published", formData.published);
 
       if (formData.image) {
-        formDataToSend.append("image", formData.image);
+        formDataToSend.append("featuredImage", formData.image);
       }
 
       if (editingBlog) {
@@ -172,18 +184,19 @@ const BlogManagement = () => {
             },
           }
         );
-        alert("Blog updated successfully!");
+        setSuccessMessage("Blog updated successfully!");
       } else {
-        await axios.post(`${API_URL}/blog/admin`, formDataToSend, {
+        await axios.post(`${API_URL}/blog`, formDataToSend, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         });
-        alert("Blog created successfully!");
+        setSuccessMessage("Blog created successfully!");
       }
 
       handleCloseModal();
+      setShowSuccessModal(true);
       fetchBlogs();
     } catch (error) {
       console.error("Error saving blog:", error);
@@ -200,7 +213,8 @@ const BlogManagement = () => {
       await axios.delete(`${API_URL}/blog/admin/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      alert("Blog deleted successfully!");
+      setSuccessMessage("Blog deleted successfully!");
+      setShowSuccessModal(true);
       fetchBlogs();
     } catch (error) {
       console.error("Error deleting blog:", error);
@@ -407,9 +421,11 @@ const BlogManagement = () => {
               <option value="">Select Category</option>
               <option value="Healthcare">Healthcare</option>
               <option value="Education">Education</option>
-              <option value="Community">Community</option>
+              <option value="Development">Development</option>
+              <option value="Justice">Justice</option>
               <option value="Events">Events</option>
-              <option value="Impact Stories">Impact Stories</option>
+              <option value="Success Story">Success Story</option>
+              <option value="General">General</option>
             </select>
           </div>
 
@@ -531,6 +547,14 @@ const BlogManagement = () => {
           </div>
         </form>
       </FormModal>
+
+      {/* Success Modal */}
+      <Modal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        type="success"
+        message={successMessage}
+      />
     </div>
   );
 };

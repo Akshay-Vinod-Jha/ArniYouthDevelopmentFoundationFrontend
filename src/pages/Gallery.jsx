@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import {
   Image as ImageIcon,
@@ -10,11 +10,32 @@ import {
   Search,
 } from "lucide-react";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 const Gallery = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [loadedImages, setLoadedImages] = useState({});
+  const [visibleCount, setVisibleCount] = useState(12); // Initially load 12 images
+  const [dynamicImages, setDynamicImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch dynamic images from database
+  useEffect(() => {
+    const fetchGalleryImages = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/gallery`);
+        setDynamicImages(response.data.items || []);
+      } catch (error) {
+        console.error("Error fetching gallery images:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchGalleryImages();
+  }, []);
 
   // Import all images from aydf_gallery folder
   const importImages = () => {
@@ -90,24 +111,70 @@ const Gallery = () => {
       "Community",
     ];
 
+    // Define different aspect ratios for varied image sizes (Pinterest-style)
+    const aspectRatios = [
+      "aspect-[3/4]", // Portrait
+      "aspect-[4/5]", // Tall portrait
+      "aspect-[1/1]", // Square
+      "aspect-[16/9]", // Landscape
+      "aspect-[4/3]", // Standard landscape
+      "aspect-[2/3]", // Tall portrait
+      "aspect-[3/2]", // Wide landscape
+      "aspect-[9/16]", // Very tall portrait
+    ];
+
     return imageFiles.map((filename, index) => ({
       id: index + 1,
       url: `/aydf_gallery/${filename}`,
       title: `AYDF Activity ${index + 1}`,
       program: programs[index % programs.length],
       date: "2024-2025",
+      aspectRatio: aspectRatios[index % aspectRatios.length], // Assign varying aspect ratios
     }));
   };
 
-  const images = importImages();
+  const staticImages = importImages();
+
+  // Define different aspect ratios for dynamic images
+  const aspectRatios = [
+    "aspect-[3/4]", // Portrait
+    "aspect-[4/5]", // Tall portrait
+    "aspect-[1/1]", // Square
+    "aspect-[16/9]", // Landscape
+    "aspect-[4/3]", // Standard landscape
+    "aspect-[2/3]", // Tall portrait
+    "aspect-[3/2]", // Wide landscape
+    "aspect-[9/16]", // Very tall portrait
+  ];
+
+  // Combine dynamic images with static images (dynamic first)
+  const images = [
+    ...dynamicImages.map((item, index) => ({
+      id: `dynamic-${item._id}`,
+      url: item.media?.url || item.media,
+      title: item.title || "Gallery Image",
+      program: item.category
+        ? item.category.charAt(0).toUpperCase() + item.category.slice(1)
+        : "General",
+      date: new Date(item.createdAt).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+      }),
+      aspectRatio: aspectRatios[index % aspectRatios.length],
+    })),
+    ...staticImages,
+  ];
 
   const categories = [
     "All",
     "Healthcare",
     "Education",
-    "Rural Development",
+    "Development",
+    "Justice",
     "Events",
+    "General",
     "Community",
+    "Rural Development",
   ];
 
   const images_old = [
@@ -282,9 +349,12 @@ const Gallery = () => {
   ];
 
   const filteredImages = images.filter((img) => {
-    // Category filter
+    // Category filter (case-insensitive)
     const matchesCategory =
-      selectedCategory === "All" || img.program === selectedCategory;
+      selectedCategory === "All" ||
+      img.program.toLowerCase() === selectedCategory.toLowerCase() ||
+      (selectedCategory === "Rural Development" &&
+        img.program.toLowerCase() === "development");
 
     // Search filter
     const matchesSearch =
@@ -317,24 +387,41 @@ const Gallery = () => {
     setCurrentIndex(prevIndex);
   };
 
+  // Handle image loading
+  const handleImageLoad = (imageId) => {
+    setLoadedImages((prev) => ({
+      ...prev,
+      [imageId]: true,
+    }));
+  };
+
+  // Load more images when scrolling
+  const loadMoreImages = () => {
+    setVisibleCount((prev) => Math.min(prev + 12, filteredImages.length));
+  };
+
+  // Reset when filters change
+  useEffect(() => {
+    setLoadedImages({});
+    setVisibleCount(12);
+  }, [selectedCategory, searchQuery]);
+
+  // Get only visible images
+  const visibleImages = filteredImages.slice(0, visibleCount);
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-primary to-secondary text-white py-20">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-4xl mx-auto"
-          >
+          <div className="text-center max-w-4xl mx-auto">
             <ImageIcon className="w-16 h-16 mx-auto mb-6" />
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Our Gallery</h1>
             <p className="text-xl text-white/90">
               Capturing moments of impact, transformation, and hope
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -362,7 +449,7 @@ const Gallery = () => {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                className={`px-4 py-2 rounded-full text-sm font-medium ${
                   selectedCategory === category
                     ? "bg-primary text-white"
                     : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
@@ -393,61 +480,69 @@ const Gallery = () => {
         </div>
       </section>
 
-      {/* Gallery Grid */}
+      {/* Gallery Grid - Pinterest Masonry Layout */}
       <section className="py-16">
-        <div
-          className="container mx-auto px-4 reveal"
-          ref={useIntersectionObserver()}
-        >
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4"
-          >
-            {filteredImages.map((image, index) => (
-              <motion.div
+        <div className="container mx-auto px-4">
+          <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
+            {visibleImages.map((image, index) => (
+              <div
                 key={image.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-                className={`${
-                  index % 3 === 0
-                    ? "reveal-scale"
-                    : index % 3 === 1
-                    ? "reveal-left"
-                    : "reveal-right"
-                } reveal-delay-${Math.min(
-                  index * 50,
-                  500
-                )} break-inside-avoid group cursor-pointer`}
-                ref={useIntersectionObserver()}
+                className="break-inside-avoid mb-4 group cursor-pointer"
                 onClick={() => openLightbox(image, index)}
               >
-                <div className="relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300">
-                  <img
-                    src={image.url}
-                    alt={image.title}
-                    className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                      <h3 className="font-semibold text-lg mb-1">
-                        {image.title}
-                      </h3>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="bg-primary px-2 py-1 rounded text-xs">
-                          {image.program}
-                        </span>
-                        <span className="text-gray-200">{image.date}</span>
+                <div className="relative w-full overflow-hidden rounded-xl shadow-lg hover:shadow-2xl bg-gray-100 dark:bg-gray-800">
+                  {/* Container with aspect ratio */}
+                  <div className={`relative w-full ${image.aspectRatio}`}>
+                    {/* Loading Placeholder */}
+                    {!loadedImages[image.id] && (
+                      <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700">
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <ImageIcon className="w-12 h-12 text-gray-400 dark:text-gray-500" />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Actual Image */}
+                    <img
+                      src={image.url}
+                      alt={image.title}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                      onLoad={() => handleImageLoad(image.id)}
+                    />
+
+                    {/* Hover Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-0 group-hover:opacity-100">
+                      <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                        <h3 className="font-semibold text-base md:text-lg mb-1 line-clamp-2">
+                          {image.title}
+                        </h3>
+                        <div className="flex items-center justify-between text-xs md:text-sm flex-wrap gap-2">
+                          <span className="bg-primary px-2 py-1 rounded text-xs">
+                            {image.program}
+                          </span>
+                          <span className="text-gray-200">{image.date}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
+
+          {/* Load More Trigger */}
+          {visibleCount < filteredImages.length && (
+            <div
+              ref={useIntersectionObserver(loadMoreImages)}
+              className="text-center py-8"
+            >
+              <div className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                <span>Loading more images...</span>
+              </div>
+            </div>
+          )}
 
           {filteredImages.length === 0 && (
             <div className="text-center py-12">
@@ -464,72 +559,62 @@ const Gallery = () => {
       </section>
 
       {/* Lightbox Modal */}
-      <AnimatePresence>
-        {selectedImage && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+      {selectedImage && (
+        <div
+          onClick={closeLightbox}
+          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
+        >
+          <button
             onClick={closeLightbox}
-            className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
+            className="absolute top-4 right-4 text-white hover:text-gray-300 p-2 bg-black/50 rounded-full"
           >
-            <button
-              onClick={closeLightbox}
-              className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors p-2 bg-black/50 rounded-full"
-            >
-              <X className="w-8 h-8" />
-            </button>
+            <X className="w-8 h-8" />
+          </button>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                prevImage();
-              }}
-              className="absolute left-4 text-white hover:text-gray-300 transition-colors p-2 bg-black/50 rounded-full"
-            >
-              <ChevronLeft className="w-8 h-8" />
-            </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              prevImage();
+            }}
+            className="absolute left-4 text-white hover:text-gray-300 p-2 bg-black/50 rounded-full"
+          >
+            <ChevronLeft className="w-8 h-8" />
+          </button>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                nextImage();
-              }}
-              className="absolute right-4 text-white hover:text-gray-300 transition-colors p-2 bg-black/50 rounded-full"
-            >
-              <ChevronRight className="w-8 h-8" />
-            </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              nextImage();
+            }}
+            className="absolute right-4 text-white hover:text-gray-300 p-2 bg-black/50 rounded-full"
+          >
+            <ChevronRight className="w-8 h-8" />
+          </button>
 
-            <motion.div
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              onClick={(e) => e.stopPropagation()}
-              className="max-w-6xl max-h-[90vh] relative"
-            >
-              <img
-                src={selectedImage.url}
-                alt={selectedImage.title}
-                className="max-w-full max-h-[80vh] object-contain rounded-lg"
-              />
-              <div className="mt-4 text-center text-white">
-                <h3 className="text-2xl font-bold mb-2">
-                  {selectedImage.title}
-                </h3>
-                <div className="flex items-center justify-center gap-4 text-sm">
-                  <span className="bg-primary px-3 py-1 rounded-full">
-                    {selectedImage.program}
-                  </span>
-                  <span className="text-gray-300">{selectedImage.date}</span>
-                  <span className="text-gray-400">
-                    {currentIndex + 1} / {filteredImages.length}
-                  </span>
-                </div>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="max-w-6xl max-h-[90vh] relative"
+          >
+            <img
+              src={selectedImage.url}
+              alt={selectedImage.title}
+              className="max-w-full max-h-[80vh] object-contain rounded-lg"
+            />
+            <div className="mt-4 text-center text-white">
+              <h3 className="text-2xl font-bold mb-2">{selectedImage.title}</h3>
+              <div className="flex items-center justify-center gap-4 text-sm">
+                <span className="bg-primary px-3 py-1 rounded-full">
+                  {selectedImage.program}
+                </span>
+                <span className="text-gray-300">{selectedImage.date}</span>
+                <span className="text-gray-400">
+                  {currentIndex + 1} / {filteredImages.length}
+                </span>
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -75,46 +75,62 @@ const MembershipManagement = () => {
   }, [members, statusFilter, planFilter, searchQuery]);
 
   const handleToggleStatus = async (id, currentStatus) => {
+    console.log("Toggle status clicked:", { id, currentStatus });
     const action = currentStatus ? "deactivate" : "activate";
-    if (!confirm(`Are you sure you want to ${action} this membership?`)) return;
+    if (!confirm(`Are you sure you want to ${action} this membership?`)) {
+      console.log("User cancelled action");
+      return;
+    }
 
     try {
       const token = localStorage.getItem("adminToken");
-      await axios.put(
+      console.log("Sending status update request...");
+      const response = await axios.put(
         `${API_URL}/members/${id}/status`,
         { isActive: !currentStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      console.log("Status update response:", response.data);
       alert(`Membership ${action}d successfully!`);
       fetchMembers();
     } catch (error) {
       console.error("Error updating member status:", error);
-      alert("Failed to update membership status");
+      console.error("Error details:", error.response?.data);
+      alert(
+        error.response?.data?.message || "Failed to update membership status"
+      );
     }
   };
 
   const handleDelete = async (id) => {
+    console.log("Delete clicked:", id);
     if (
       !confirm(
         "Are you sure you want to delete this membership? This cannot be undone."
       )
-    )
+    ) {
+      console.log("User cancelled delete");
       return;
+    }
 
     try {
       const token = localStorage.getItem("adminToken");
-      await axios.delete(`${API_URL}/members/admin/${id}`, {
+      console.log("Sending delete request...");
+      const response = await axios.delete(`${API_URL}/members/admin/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log("Delete response:", response.data);
       alert("Membership deleted successfully!");
       fetchMembers();
     } catch (error) {
       console.error("Error deleting member:", error);
-      alert("Failed to delete membership");
+      console.error("Error details:", error.response?.data);
+      alert(error.response?.data?.message || "Failed to delete membership");
     }
   };
 
   const handleViewDetails = (member) => {
+    console.log("View details clicked:", member);
     setSelectedMember(member);
     setShowDetailModal(true);
   };
@@ -182,14 +198,20 @@ const MembershipManagement = () => {
       render: (row) => (
         <div className="flex gap-2">
           <button
-            onClick={() => handleViewDetails(row)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleViewDetails(row);
+            }}
             className="p-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded"
             title="View Details"
           >
             <Eye className="w-4 h-4 text-blue-600 dark:text-blue-400" />
           </button>
           <button
-            onClick={() => handleToggleStatus(row._id, row.isActive)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleToggleStatus(row._id, row.isActive);
+            }}
             className={`p-2 rounded ${
               row.isActive
                 ? "hover:bg-red-50 dark:hover:bg-red-900/20"
@@ -204,7 +226,10 @@ const MembershipManagement = () => {
             )}
           </button>
           <button
-            onClick={() => handleDelete(row._id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(row._id);
+            }}
             className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
             title="Delete"
           >

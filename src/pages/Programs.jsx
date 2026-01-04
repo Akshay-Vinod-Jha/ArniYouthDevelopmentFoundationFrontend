@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Droplet,
   GraduationCap,
@@ -22,7 +23,27 @@ import {
 } from "lucide-react";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 const Programs = () => {
+  const [dynamicPrograms, setDynamicPrograms] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch programs from database
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/programs`);
+        setDynamicPrograms(response.data.programs || []);
+      } catch (error) {
+        console.error("Error fetching programs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPrograms();
+  }, []);
+
   const programs = [
     {
       id: "healthcare",
@@ -251,6 +272,101 @@ const Programs = () => {
           </div>
         </section>
       ))}
+
+      {/* Dynamic Programs from Database */}
+      {!loading && dynamicPrograms.length > 0 && (
+        <section className="py-20 bg-gray-50 dark:bg-gray-800">
+          <div className="container">
+            <h2 className="text-4xl font-bold text-center mb-4 text-gray-900 dark:text-white">
+              Our Additional Programs
+            </h2>
+            <p className="text-center text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
+              Discover more initiatives making a difference in our communities
+            </p>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {dynamicPrograms.map((program, index) => (
+                <div
+                  key={program._id}
+                  className="bg-white dark:bg-gray-700 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group"
+                >
+                  {program.image?.url && (
+                    <div className="h-48 overflow-hidden">
+                      <img
+                        src={program.image.url}
+                        alt={program.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    </div>
+                  )}
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="px-3 py-1 bg-primary/10 dark:bg-primary/20 text-primary rounded-full text-sm font-medium">
+                        {program.category?.charAt(0).toUpperCase() +
+                          program.category?.slice(1) || "General"}
+                      </span>
+                      {program.status && (
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            program.status === "active"
+                              ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                              : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400"
+                          }`}
+                        >
+                          {program.status}
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors">
+                      {program.title}
+                    </h3>
+
+                    <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+                      {program.description}
+                    </p>
+
+                    {program.targetAudience && (
+                      <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
+                        <Users className="w-4 h-4" />
+                        <span>Target: {program.targetAudience}</span>
+                      </div>
+                    )}
+
+                    {program.location && (
+                      <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+                        <Building className="w-4 h-4" />
+                        <span>{program.location}</span>
+                      </div>
+                    )}
+
+                    {program.objectives && program.objectives.length > 0 && (
+                      <div className="border-t border-gray-200 dark:border-gray-600 pt-4 mt-4">
+                        <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                          Key Objectives:
+                        </p>
+                        <ul className="space-y-1">
+                          {program.objectives
+                            .slice(0, 3)
+                            .map((objective, idx) => (
+                              <li
+                                key={idx}
+                                className="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-2"
+                              >
+                                <ArrowRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                                <span>{objective}</span>
+                              </li>
+                            ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-primary to-secondary text-white">

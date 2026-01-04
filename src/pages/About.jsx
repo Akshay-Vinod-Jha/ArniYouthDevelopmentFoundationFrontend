@@ -1,9 +1,39 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
-import { Target, Eye, Heart, Users, Award, ArrowRight } from "lucide-react";
+import {
+  Target,
+  Eye,
+  Heart,
+  Users,
+  Award,
+  ArrowRight,
+  Linkedin,
+  Mail,
+} from "lucide-react";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 const About = () => {
+  const [boardMembers, setBoardMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch board members from database
+  useEffect(() => {
+    const fetchBoardMembers = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/board`);
+        setBoardMembers(response.data.members || []);
+      } catch (error) {
+        console.error("Error fetching board members:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBoardMembers();
+  }, []);
+
   const boards = [
     {
       name: "Healthcare Board",
@@ -223,6 +253,110 @@ const About = () => {
           </div>
         </div>
       </section>
+
+      {/* Board Members */}
+      {!loading && boardMembers.length > 0 && (
+        <section className="py-20 bg-white dark:bg-gray-900">
+          <div className="container">
+            <h2 className="text-4xl font-bold text-center mb-4 text-gray-900 dark:text-white">
+              Meet Our Board Members
+            </h2>
+            <p className="text-center text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
+              Dedicated leaders committed to driving positive change
+            </p>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {boardMembers.map((member, index) => (
+                <div
+                  key={member._id}
+                  className="bg-gray-50 dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group"
+                >
+                  {member.photo?.url ? (
+                    <div className="h-64 overflow-hidden bg-gray-200 dark:bg-gray-700">
+                      <img
+                        src={member.photo.url}
+                        alt={member.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-64 bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                      <span className="text-6xl font-bold text-white">
+                        {member.name?.charAt(0) || "?"}
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                      {member.name}
+                    </h3>
+
+                    <p className="text-sm font-medium text-primary dark:text-primary/80 mb-1">
+                      {member.position}
+                    </p>
+
+                    {member.boardType && (
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        {member.boardType.charAt(0).toUpperCase() +
+                          member.boardType.slice(1)}{" "}
+                        Board
+                      </p>
+                    )}
+
+                    {member.bio && (
+                      <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3">
+                        {member.bio}
+                      </p>
+                    )}
+
+                    {member.expertise && member.expertise.length > 0 && (
+                      <div className="mb-4">
+                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                          Expertise:
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {member.expertise.slice(0, 3).map((skill, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2 py-1 bg-primary/10 dark:bg-primary/20 text-primary rounded-full text-xs"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                      {member.email && (
+                        <a
+                          href={`mailto:${member.email}`}
+                          className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
+                          title="Email"
+                        >
+                          <Mail className="w-5 h-5" />
+                        </a>
+                      )}
+                      {member.linkedIn && (
+                        <a
+                          href={member.linkedIn}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
+                          title="LinkedIn"
+                        >
+                          <Linkedin className="w-5 h-5" />
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA */}
       <section className="py-20 dark:bg-gray-900">

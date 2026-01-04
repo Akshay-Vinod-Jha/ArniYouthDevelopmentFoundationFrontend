@@ -59,11 +59,6 @@ const Sidebar = () => {
       path: "/admin/donations",
       icon: Heart,
     },
-    {
-      name: "Image Library",
-      path: "/admin/library",
-      icon: Library,
-    },
   ];
 
   return (

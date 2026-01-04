@@ -109,91 +109,109 @@ const MembershipPage = () => {
       document.body.appendChild(script);
 
       script.onload = async () => {
-        // Create order (₹500 membership fee)
-        const orderResponse = await axios.post(`${API_URL}/donations/create`, {
-          amount: 500,
-          donorInfo: {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            program: "membership",
-            isAnonymous: false,
-          },
-        });
+        try {
+          // Create membership application
+          const applicationResponse = await axios.post(
+            `${API_URL}/members/apply`,
+            {
+              name: formData.name,
+              email: formData.email,
+              phone: formData.phone,
+              address: {
+                line1: formData.address.line1,
+                city: formData.address.city,
+                state: formData.address.state,
+                pincode: formData.address.pincode,
+              },
+              occupation: formData.occupation,
+              dateOfBirth: formData.dateOfBirth,
+            }
+          );
 
-        const { orderId, amount } = orderResponse.data;
+          const { member, order } = applicationResponse.data;
 
-        const options = {
-          key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-          amount: amount,
-          currency: "INR",
-          name: "AYDF Membership",
-          description: "Annual Membership Fee",
-          order_id: orderId,
-          handler: async function (response) {
-            try {
-              // Verify payment
-              const verifyData = await axios.post(
-                `${API_URL}/donations/verify`,
-                {
-                  razorpay_order_id: response.razorpay_order_id,
-                  razorpay_payment_id: response.razorpay_payment_id,
-                  razorpay_signature: response.razorpay_signature,
-                }
-              );
-
-              if (verifyData.data.success) {
-                const membershipId = `MEM${Date.now()}`;
-
-                showModal(
-                  "success",
-                  "🎉 Welcome to AYDF Family!",
-                  `Thank you ${formData.name}! Your membership has been activated.\n\nMembership ID: ${membershipId}\n\nYour membership certificate and welcome kit details have been sent to ${formData.email}.\n\nYou'll receive your physical membership card within 7-10 business days.`
+          const options = {
+            key: order.key,
+            amount: order.amount,
+            currency: order.currency,
+            name: "AYDF Membership",
+            description: "Annual Membership Fee",
+            order_id: order.orderId,
+            handler: async function (response) {
+              try {
+                // Verify payment
+                const verifyData = await axios.post(
+                  `${API_URL}/members/verify-payment`,
+                  {
+                    memberId: member.id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                  }
                 );
 
-                // Reset form
-                setFormData({
-                  name: "",
-                  email: "",
-                  phone: "",
-                  address: {
-                    line1: "",
-                    line2: "",
-                    city: "",
-                    state: "",
-                    pincode: "",
-                  },
-                  dateOfBirth: "",
-                  occupation: "",
-                });
-              }
-            } catch (error) {
-              showModal(
-                "error",
-                "Verification Failed",
-                "Payment verification failed. Please contact support."
-              );
-            } finally {
-              setIsProcessing(false);
-            }
-          },
-          prefill: {
-            name: formData.name,
-            email: formData.email,
-            contact: formData.phone,
-          },
-          theme: {
-            color: "#FF6B35",
-          },
-          modal: {
-            ondismiss: function () {
-              setIsProcessing(false);
-            },
-          },
-        };
+                if (verifyData.data.success) {
+                  showModal(
+                    "success",
+                    "🎉 Welcome to AYDF Family!",
+                    `Thank you ${formData.name}! Your membership has been activated.\n\nMembership ID: ${member.membershipId}\n\nYour membership certificate and welcome kit details have been sent to ${formData.email}.\n\nYou'll receive your physical membership card within 7-10 business days.`
+                  );
 
-        const razorpay = new window.Razorpay(options);
-        razorpay.open();
+                  // Reset form
+                  setFormData({
+                    name: "",
+                    email: "",
+                    phone: "",
+                    address: {
+                      line1: "",
+                      line2: "",
+                      city: "",
+                      state: "",
+                      pincode: "",
+                    },
+                    dateOfBirth: "",
+                    occupation: "",
+                  });
+                }
+              } catch (error) {
+                console.error("Payment verification error:", error);
+                showModal(
+                  "error",
+                  "Verification Failed",
+                  error.response?.data?.message ||
+                    "Payment verification failed. Please contact support."
+                );
+              } finally {
+                setIsProcessing(false);
+              }
+            },
+            prefill: {
+              name: formData.name,
+              email: formData.email,
+              contact: formData.phone,
+            },
+            theme: {
+              color: "#FF6B35",
+            },
+            modal: {
+              ondismiss: function () {
+                setIsProcessing(false);
+              },
+            },
+          };
+
+          const razorpay = new window.Razorpay(options);
+          razorpay.open();
+        } catch (error) {
+          console.error("Membership application error:", error);
+          showModal(
+            "error",
+            "Application Failed",
+            error.response?.data?.message ||
+              "Failed to process membership application. Please try again."
+          );
+          setIsProcessing(false);
+        }
       };
 
       script.onerror = () => {
