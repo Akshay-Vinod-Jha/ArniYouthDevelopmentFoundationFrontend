@@ -62,9 +62,13 @@ export const AdminProvider = ({ children }) => {
         throw new Error("Unauthorized: Admin access required");
       }
 
+      // Set token and admin state
       setToken(newToken);
       setAdmin(user);
       localStorage.setItem("adminToken", newToken);
+
+      // IMPORTANT: Set axios headers immediately (don't wait for useEffect)
+      axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
 
       return { success: true, user };
     } catch (error) {

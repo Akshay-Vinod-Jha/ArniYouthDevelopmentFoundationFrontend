@@ -34,23 +34,36 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
 
+      // Get token from localStorage
+      const token = localStorage.getItem("adminToken");
+
+      if (!token) {
+        console.error("No admin token found");
+        setLoading(false);
+        return;
+      }
+
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
       // Fetch all stats in parallel
       const [blogsRes, volunteersRes, membersRes, donationsRes, contactsRes] =
         await Promise.all([
           axios
-            .get(`${API_URL}/blog/admin/all?limit=1`)
+            .get(`${API_URL}/blog/admin/all?limit=1`, config)
             .catch(() => ({ data: { total: 0 } })),
           axios
-            .get(`${API_URL}/volunteers?limit=1`)
+            .get(`${API_URL}/volunteers?limit=1`, config)
             .catch(() => ({ data: { total: 0 } })),
           axios
-            .get(`${API_URL}/members?limit=1`)
+            .get(`${API_URL}/members?limit=1`, config)
             .catch(() => ({ data: { total: 0 } })),
           axios
-            .get(`${API_URL}/donations?limit=1`)
+            .get(`${API_URL}/donations?limit=1`, config)
             .catch(() => ({ data: { total: 0, totalAmount: 0 } })),
           axios
-            .get(`${API_URL}/contact?limit=1`)
+            .get(`${API_URL}/contact?limit=1`, config)
             .catch(() => ({ data: { total: 0 } })),
         ]);
 
