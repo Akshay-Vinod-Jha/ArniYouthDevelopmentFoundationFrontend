@@ -12,7 +12,7 @@ import {
   Library,
 } from "lucide-react";
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const menuItems = [
     {
       name: "Dashboard",
@@ -62,7 +62,11 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-64 bg-gray-900 dark:bg-gray-950 text-white min-h-screen flex flex-col border-r border-gray-800 dark:border-gray-700">
+    <div
+      className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-gray-900 dark:bg-gray-950 text-white min-h-screen flex flex-col border-r border-gray-800 dark:border-gray-700 transform transition-transform duration-300 ease-in-out ${
+        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      }`}
+    >
       {/* Logo */}
       <div className="p-6 border-b border-gray-800 dark:border-gray-700">
         <h1 className="text-xl font-bold">AYDF Admin</h1>
@@ -70,13 +74,14 @@ const Sidebar = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1">
+      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {menuItems.map((item) => {
           const Icon = item.icon;
           return (
             <NavLink
               key={item.path}
               to={item.path}
+              onClick={onClose}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                   isActive
@@ -85,7 +90,7 @@ const Sidebar = () => {
                 }`
               }
             >
-              <Icon className="w-5 h-5" />
+              <Icon className="w-5 h-5 flex-shrink-0" />
               <span className="text-sm font-medium">{item.name}</span>
             </NavLink>
           );

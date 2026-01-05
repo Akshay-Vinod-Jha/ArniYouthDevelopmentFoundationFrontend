@@ -19,13 +19,13 @@ const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
       />
 
       {/* Modal */}
-      <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="flex min-h-screen items-center justify-center p-2 sm:p-4">
         <div
-          className={`relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full ${sizeClasses[size]} max-h-[90vh] overflow-hidden`}
+          className={`relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full ${sizeClasses[size]} max-h-[95vh] sm:max-h-[90vh] overflow-hidden`}
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-3 sm:py-4">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
               {title}
             </h3>
             <button
@@ -37,7 +37,7 @@ const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
           </div>
 
           {/* Content */}
-          <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+          <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(95vh-80px)] sm:max-h-[calc(90vh-120px)]">
             {children}
           </div>
         </div>
