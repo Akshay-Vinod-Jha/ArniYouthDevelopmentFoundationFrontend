@@ -10,6 +10,7 @@ import {
   Heart,
   Mail,
   Library,
+  MapPin,
 } from "lucide-react";
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -38,6 +39,11 @@ const Sidebar = ({ isOpen, onClose }) => {
       name: "Board Members",
       path: "/admin/board",
       icon: Users,
+    },
+    {
+      name: "Village Profiles",
+      path: "/admin/village-profiles",
+      icon: MapPin,
     },
     {
       name: "Volunteers",

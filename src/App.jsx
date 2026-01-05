@@ -19,6 +19,7 @@ import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import VillageProfiles from "./pages/VillageProfiles";
 
 // Admin Imports
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -32,6 +33,7 @@ import VolunteerManagement from "./pages/admin/VolunteerManagement";
 import MembershipManagement from "./pages/admin/MembershipManagement";
 import ContactManagement from "./pages/admin/ContactManagement";
 import DonationManagement from "./pages/admin/DonationManagement";
+import VillageProfileManagement from "./pages/admin/VillageProfileManagement";
 
 function App() {
   return (
@@ -48,6 +50,10 @@ function App() {
               <Route path="programs" element={<ProgramManagement />} />
               <Route path="gallery" element={<GalleryManagement />} />
               <Route path="board" element={<BoardManagement />} />
+              <Route
+                path="village-profiles"
+                element={<VillageProfileManagement />}
+              />
               <Route path="volunteers" element={<VolunteerManagement />} />
               <Route path="memberships" element={<MembershipManagement />} />
               <Route path="contacts" element={<ContactManagement />} />
@@ -70,6 +76,10 @@ function App() {
                       <Route path="/donate" element={<Donate />} />
                       <Route path="/membership" element={<MembershipPage />} />
                       <Route path="/volunteer" element={<VolunteerPage />} />
+                      <Route
+                        path="/village-community"
+                        element={<VillageProfiles />}
+                      />
                       <Route path="/blog" element={<Blog />} />
                       <Route path="/blog/:slug" element={<BlogPost />} />
                       <Route path="/gallery" element={<Gallery />} />
