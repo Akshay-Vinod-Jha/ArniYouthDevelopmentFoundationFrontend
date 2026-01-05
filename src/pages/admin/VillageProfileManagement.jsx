@@ -55,21 +55,29 @@ const VillageProfileManagement = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("adminToken");
+
+      // Build params object with only non-empty values
+      const params = {};
+      if (searchTerm) params.search = searchTerm;
+      if (filters.village) params.village = filters.village;
+      if (filters.currentCity) params.currentCity = filters.currentCity;
+      if (filters.occupation) params.occupation = filters.occupation;
+      if (filters.isActive) params.isActive = filters.isActive;
+
       const config = {
         headers: { Authorization: `Bearer ${token}` },
-        params: {
-          search: searchTerm,
-          ...filters,
-        },
+        params,
       };
 
       const response = await axios.get(
         `${API_URL}/village-profiles/admin/all`,
         config
       );
+      console.log("Fetched profiles:", response.data);
       setProfiles(response.data.data || []);
     } catch (error) {
       console.error("Error fetching profiles:", error);
+      alert("Error fetching profiles. Check console for details.");
     } finally {
       setLoading(false);
     }
