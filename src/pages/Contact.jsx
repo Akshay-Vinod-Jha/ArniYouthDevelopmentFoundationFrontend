@@ -159,8 +159,20 @@ const Contact = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-secondary text-white py-16">
-        <div className="container text-center">
+      <section className="relative text-white py-16 overflow-hidden">
+        {/* Blurred Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: "url(/WhoWeAre.jpg)",
+            filter: "blur(3px)",
+            transform: "scale(1.1)",
+          }}
+        />
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/75 via-primary/65 to-secondary/75" />
+
+        <div className="container text-center relative z-10">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in">
             Contact Us
           </h1>
@@ -174,17 +186,16 @@ const Contact = () => {
       </section>
 
       {/* Contact Info Cards */}
-      <section className="py-12 bg-gray-50 dark:bg-gray-800">
+      <section
+        className="py-12 bg-gray-50 dark:bg-gray-800 animate-fade-in"
+        ref={useIntersectionObserver()}
+      >
         <div className="container">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {contactInfo.map((info, index) => (
               <div
                 key={index}
-                className={`${
-                  index % 2 === 0 ? "reveal-left" : "reveal-right"
-                } reveal-delay-${
-                  index * 100
-                } bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg text-center animate-fade-in`}
+                className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg text-center animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
                 ref={useIntersectionObserver()}
               >
@@ -208,11 +219,14 @@ const Contact = () => {
       </section>
 
       {/* Contact Form & Map */}
-      <section className="py-20 dark:bg-gray-900">
+      <section
+        className="py-20 dark:bg-gray-900 animate-fade-in"
+        ref={useIntersectionObserver()}
+      >
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <div className="reveal-left" ref={useIntersectionObserver()}>
+            <div ref={useIntersectionObserver()}>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
                 Send Us a Message
               </h2>
@@ -345,10 +359,7 @@ const Contact = () => {
             </div>
 
             {/* Map & Additional Info */}
-            <div
-              className="reveal-right reveal-delay-200"
-              ref={useIntersectionObserver()}
-            >
+            <div ref={useIntersectionObserver()}>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
                 Visit Us
               </h2>
@@ -391,7 +402,10 @@ const Contact = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-800">
+      <section
+        className="py-20 bg-gray-50 dark:bg-gray-800 animate-fade-in"
+        ref={useIntersectionObserver()}
+      >
         <div className="container max-w-4xl">
           <h2 className="section-title text-center mb-12">
             Frequently Asked Questions
@@ -417,11 +431,7 @@ const Contact = () => {
             ].map((faq, index) => (
               <details
                 key={index}
-                className={`${
-                  index % 2 === 0 ? "reveal-left" : "reveal-right"
-                } reveal-delay-${
-                  index * 100
-                } bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg`}
+                className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg"
                 ref={useIntersectionObserver()}
               >
                 <summary className="font-semibold text-gray-900 dark:text-white cursor-pointer hover:text-primary">
@@ -470,7 +480,7 @@ const Contact = () => {
                       <img
                         src={member.image.url}
                         alt={member.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-500"
                       />
                     </div>
                   ) : (

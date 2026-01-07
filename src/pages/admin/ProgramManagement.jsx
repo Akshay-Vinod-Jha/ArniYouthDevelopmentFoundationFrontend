@@ -2,20 +2,25 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "../../components/admin/DataTable";
 import FormModal from "../../components/admin/FormModal";
-import { Edit, Trash2, Plus } from "lucide-react";
+import { Edit, Trash2, Plus, Upload, X } from "lucide-react";
 
 const ProgramManagement = () => {
   const [programs, setPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingProgram, setEditingProgram] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [formData, setFormData] = useState({
     id: "",
     title: "",
     description: "",
-    icon: "",
-    color: "blue",
-    features: "",
+    category: "other",
+    objectives: "",
+    targetAudience: "",
+    location: "",
+    duration: "",
+    status: "active",
     isActive: true,
     order: 0,
   });
@@ -50,24 +55,34 @@ const ProgramManagement = () => {
         id: program.id,
         title: program.title,
         description: program.description,
-        icon: program.icon,
-        color: program.color,
-        features: program.features?.join("\n") || "",
+        category: program.category || "other",
+        objectives: program.objectives?.join("\n") || "",
+        targetAudience: program.targetAudience || "",
+        location: program.location || "",
+        duration: program.duration || "",
+        status: program.status || "active",
         isActive: program.isActive,
         order: program.order,
       });
+      setImagePreview(program.image?.url || null);
+      setImageFile(null);
     } else {
       setEditingProgram(null);
       setFormData({
         id: "",
         title: "",
         description: "",
-        icon: "",
-        color: "blue",
-        features: "",
+        category: "other",
+        objectives: "",
+        targetAudience: "",
+        location: "",
+        duration: "",
+        status: "active",
         isActive: true,
         order: programs.length + 1,
       });
+      setImagePreview(null);
+      setImageFile(null);
     }
     setShowModal(true);
   };
@@ -75,6 +90,8 @@ const ProgramManagement = () => {
   const handleCloseModal = () => {
     setShowModal(false);
     setEditingProgram(null);
+    setImageFile(null);
+    setImagePreview(null);
   };
 
   const handleInputChange = (e) => {
@@ -85,28 +102,70 @@ const ProgramManagement = () => {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 3 * 1024 * 1024) {
+        alert("Image size should be less than 3MB");
+        return;
+      }
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
 
     try {
-      const dataToSend = {
-        ...formData,
-        features: formData.features.split("\n").filter((f) => f.trim()),
-      };
+      const formDataToSend = new FormData();
+
+      // Append all form fields
+      Object.keys(formData).forEach((key) => {
+        if (key === "objectives") {
+          // Convert objectives string to array
+          const objectivesArray = formData.objectives
+            .split("\n")
+            .filter((o) => o.trim());
+          formDataToSend.append(key, objectivesArray.join(","));
+        } else {
+          formDataToSend.append(key, formData[key]);
+        }
+      });
+
+      // Append image if selected
+      if (imageFile) {
+        formDataToSend.append("image", imageFile);
+      }
 
       if (editingProgram) {
         await axios.put(
           `${API_URL}/programs/${editingProgram.id}`,
-          dataToSend,
+          formDataToSend,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
           }
         );
         alert("Program updated successfully!");
       } else {
-        await axios.post(`${API_URL}/programs`, dataToSend, {
-          headers: { Authorization: `Bearer ${token}` },
+        await axios.post(`${API_URL}/programs`, formDataToSend, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         });
         alert("Program created successfully!");
       }
@@ -139,7 +198,33 @@ const ProgramManagement = () => {
 
   const columns = [
     { header: "ID", accessor: "id" },
+    {
+      header: "Image",
+      render: (row) => (
+        <div className="w-16 h-16">
+          {row.image?.url ? (
+            <img
+              src={row.image.url}
+              alt={row.title}
+              className="w-full h-full object-cover rounded-lg"
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center text-xs text-gray-500">
+              No Image
+            </div>
+          )}
+        </div>
+      ),
+    },
     { header: "Title", accessor: "title" },
+    {
+      header: "Category",
+      render: (row) => (
+        <span className="px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400 rounded-full text-xs font-medium capitalize">
+          {row.category || "other"}
+        </span>
+      ),
+    },
     {
       header: "Description",
       render: (row) => (
@@ -149,15 +234,20 @@ const ProgramManagement = () => {
     {
       header: "Status",
       render: (row) => (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-medium ${
-            row.isActive
-              ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
-              : "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400"
-          }`}
-        >
-          {row.isActive ? "Active" : "Inactive"}
-        </span>
+        <div className="flex flex-col gap-1">
+          <span
+            className={`px-2 py-1 rounded-full text-xs font-medium ${
+              row.isActive
+                ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
+                : "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400"
+            }`}
+          >
+            {row.isActive ? "Active" : "Inactive"}
+          </span>
+          <span className="px-2 py-1 bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 rounded-full text-xs font-medium capitalize">
+            {row.status || "active"}
+          </span>
+        </div>
       ),
     },
     { header: "Order", accessor: "order" },
@@ -185,8 +275,8 @@ const ProgramManagement = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="flex flex-col h-full gap-6">
+      <div className="flex justify-between items-center flex-shrink-0">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Program Management
@@ -204,12 +294,14 @@ const ProgramManagement = () => {
         </button>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={programs}
-        loading={loading}
-        emptyMessage="No programs found"
-      />
+      <div className="flex-1 overflow-hidden">
+        <DataTable
+          columns={columns}
+          data={programs}
+          loading={loading}
+          emptyMessage="No programs found"
+        />
+      </div>
 
       {/* Program Form Modal */}
       <FormModal
@@ -219,6 +311,46 @@ const ProgramManagement = () => {
         size="large"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Image Upload */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Program Image
+            </label>
+            <div className="space-y-3">
+              {imagePreview && (
+                <div className="relative w-full h-48 rounded-lg overflow-hidden">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={removeImage}
+                    className="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-full hover:bg-red-700 transition"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+              <label className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:border-primary dark:hover:border-primary transition">
+                <Upload className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {imagePreview ? "Change Image" : "Upload Image"}
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </label>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Recommended: 1200x800px, Max 3MB (JPG, PNG, GIF)
+              </p>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -284,49 +416,96 @@ const ProgramManagement = () => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Icon (Lucide icon name)
+                Category
+              </label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              >
+                <option value="healthcare">Healthcare</option>
+                <option value="education">Education</option>
+                <option value="rural-development">Rural Development</option>
+                <option value="social-justice">Social Justice</option>
+                <option value="environment">Environment</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Status
+              </label>
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              >
+                <option value="active">Active</option>
+                <option value="completed">Completed</option>
+                <option value="upcoming">Upcoming</option>
+                <option value="on-hold">On Hold</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Target Audience
               </label>
               <input
                 type="text"
-                name="icon"
-                value={formData.icon}
+                name="targetAudience"
+                value={formData.targetAudience}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="e.g., Heart, BookOpen"
+                placeholder="e.g., Rural youth, Students"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Color
+                Duration
               </label>
-              <select
-                name="color"
-                value={formData.color}
+              <input
+                type="text"
+                name="duration"
+                value={formData.duration}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-              >
-                <option value="blue">Blue</option>
-                <option value="green">Green</option>
-                <option value="red">Red</option>
-                <option value="orange">Orange</option>
-                <option value="purple">Purple</option>
-                <option value="yellow">Yellow</option>
-              </select>
+                placeholder="e.g., Ongoing, 6 months"
+              />
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Features (one per line)
+              Location
+            </label>
+            <input
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              placeholder="e.g., Arni, Tamil Nadu"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Objectives (one per line)
             </label>
             <textarea
-              name="features"
-              value={formData.features}
+              name="objectives"
+              value={formData.objectives}
               onChange={handleInputChange}
               rows="6"
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder="Enter each feature on a new line"
+              placeholder="Enter each objective on a new line"
             />
           </div>
 

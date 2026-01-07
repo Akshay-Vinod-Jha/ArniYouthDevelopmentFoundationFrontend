@@ -231,8 +231,20 @@ const Donate = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-secondary text-white py-16">
-        <div className="container text-center">
+      <section className="relative text-white py-16 overflow-hidden">
+        {/* Blurred Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: "url(/WhoWeAre.jpg)",
+            filter: "blur(3px)",
+            transform: "scale(1.1)",
+          }}
+        />
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/75 via-primary/65 to-secondary/75" />
+
+        <div className="container text-center relative z-10">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in">
             Donate
           </h1>
@@ -246,7 +258,10 @@ const Donate = () => {
       </section>
 
       {/* Impact Stats */}
-      <section className="py-12 bg-gray-50 dark:bg-gray-800">
+      <section
+        className="py-12 bg-gray-50 dark:bg-gray-800 animate-fade-in"
+        ref={useIntersectionObserver()}
+      >
         <div className="container">
           <div className="grid md:grid-cols-3 gap-6">
             <div className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg text-center">

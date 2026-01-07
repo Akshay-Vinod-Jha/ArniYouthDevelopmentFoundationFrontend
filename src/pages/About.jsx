@@ -38,22 +38,27 @@ const About = () => {
     {
       name: "Healthcare Board",
       description: "Managing health initiatives and medical support programs",
+      image: "/AboutOurGOv1.jpg",
     },
     {
       name: "Education Board",
       description: "Overseeing scholarships and educational programs",
+      image: "/AboutOurGOv2.jpg",
     },
     {
       name: "City & Rural Development Board",
       description: "Leading infrastructure and community development",
+      image: "/AboutOurGOv3.jpg",
     },
     {
       name: "Social Justice Board",
       description: "Ensuring legal support and rights awareness",
+      image: "/AboutOurGOv4.jpg",
     },
     {
       name: "Outreach Board",
       description: "Coordinating events, fundraising, and partnerships",
+      image: "/AboutOurGOv5.jpg",
     },
   ];
 
@@ -63,26 +68,41 @@ const About = () => {
       title: "Compassion",
       description:
         "We approach every initiative with empathy and genuine care for community wellbeing.",
+      image: "/AboutOurValues1.jpg",
     },
     {
       icon: Users,
       title: "Community First",
       description:
         "Communities are at the heart of everything we do, guiding our decisions and actions.",
+      image: "/AboutOurValues2.jpg",
     },
     {
       icon: Award,
       title: "Excellence",
       description:
         "We strive for the highest quality in all our programs and services.",
+      image: "/AboutOurValues3.jpg",
     },
   ];
 
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-secondary text-white py-16">
-        <div className="container text-center">
+      <section className="relative text-white py-16 overflow-hidden">
+        {/* Blurred Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: "url(/AboutHeader1.jpg)",
+            filter: "blur(3px)",
+            transform: "scale(1.1)",
+          }}
+        />
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/75 via-primary/65 to-secondary/75" />
+
+        <div className="container text-center relative z-10">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in">
             About AYDF
           </h1>
@@ -97,13 +117,13 @@ const About = () => {
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-20 dark:bg-gray-900">
+      <section
+        className="py-20 dark:bg-gray-900 animate-fade-in"
+        ref={useIntersectionObserver()}
+      >
         <div className="container">
           <div className="grid md:grid-cols-2 gap-12">
-            <div
-              className="reveal-left animate-fade-in"
-              ref={useIntersectionObserver()}
-            >
+            <div className="animate-fade-in" ref={useIntersectionObserver()}>
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center">
                   <Target className="w-8 h-8 text-primary" />
@@ -125,7 +145,7 @@ const About = () => {
             </div>
 
             <div
-              className="reveal-right reveal-delay-200 animate-fade-in"
+              className="animate-fade-in"
               style={{ animationDelay: "0.2s" }}
               ref={useIntersectionObserver()}
             >
@@ -153,68 +173,98 @@ const About = () => {
       </section>
 
       {/* Our Story */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-800">
+      <section
+        className="py-20 bg-gray-50 dark:bg-gray-800 animate-fade-in"
+        ref={useIntersectionObserver()}
+      >
         <div className="container">
           <h2 className="section-title text-center mb-12">Our Story</h2>
-          <div
-            className="max-w-4xl mx-auto reveal-scale"
-            ref={useIntersectionObserver()}
-          >
+          <div className="max-w-5xl mx-auto" ref={useIntersectionObserver()}>
             <div className="bg-white dark:bg-gray-700 p-8 rounded-2xl shadow-lg">
-              <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-                Founded with the spirit of "Matrubhumi" (motherland), Arni Youth
-                Development Foundation was born from a deep commitment to serve
-                rural communities in Tamil Nadu. What started as a small group
-                of dedicated volunteers has grown into a comprehensive
-                organization making a tangible impact across multiple sectors.
-              </p>
-              <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-                Our journey began with blood donation camps and has expanded to
-                include medical equipment banks, educational scholarships,
-                infrastructure development, and legal support services. Each
-                program is designed to address real community needs and create
-                lasting positive change.
-              </p>
-              <p className="text-lg text-gray-600 dark:text-gray-300">
-                Today, we're proud to have impacted over 10,000 lives through
-                our various initiatives, supported by a network of 500+
-                volunteers and governed by five specialized boards ensuring
-                excellence across all our programs.
-              </p>
+              <div className="grid md:grid-cols-3 gap-8">
+                {/* Text Content - 2 columns */}
+                <div className="md:col-span-2">
+                  <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+                    Founded with the spirit of "Matrubhumi" (motherland), Arni
+                    Youth Development Foundation was born from a deep commitment
+                    to serve rural communities in Tamil Nadu. What started as a
+                    small group of dedicated volunteers has grown into a
+                    comprehensive organization making a tangible impact across
+                    multiple sectors.
+                  </p>
+                  <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+                    Our journey began with blood donation camps and has expanded
+                    to include medical equipment banks, educational
+                    scholarships, infrastructure development, and legal support
+                    services. Each program is designed to address real community
+                    needs and create lasting positive change.
+                  </p>
+                  <p className="text-lg text-gray-600 dark:text-gray-300">
+                    Today, we're proud to have impacted over 10,000 lives
+                    through our various initiatives, supported by a network of
+                    500+ volunteers and governed by five specialized boards
+                    ensuring excellence across all our programs.
+                  </p>
+                </div>
+
+                {/* Image - 1 column */}
+                <div className="md:col-span-1 flex items-end">
+                  <img
+                    src="/AboutStory.png"
+                    alt="Our Story"
+                    className="w-full h-auto rounded-lg shadow-lg object-cover"
+                    style={{ objectPosition: "top" }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Our Values */}
-      <section className="py-20 dark:bg-gray-900">
+      <section
+        className="py-20 dark:bg-gray-900 animate-fade-in"
+        ref={useIntersectionObserver()}
+      >
         <div className="container">
           <h2 className="section-title text-center mb-12">Our Values</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="space-y-8 max-w-6xl mx-auto">
             {values.map((value, index) => (
               <div
                 key={index}
-                className={`${
-                  index % 3 === 0
-                    ? "reveal-left"
-                    : index % 3 === 1
-                    ? "reveal-scale"
-                    : "reveal-right"
-                } reveal-delay-${
-                  index * 100
-                } bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg text-center animate-fade-in`}
+                className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
                 ref={useIntersectionObserver()}
               >
-                <div className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <value.icon className="w-8 h-8 text-primary" />
+                <div
+                  className={`flex flex-col md:flex-row gap-0 items-stretch ${
+                    index % 2 === 1 ? "md:flex-row-reverse" : ""
+                  }`}
+                >
+                  {/* Content - determines the height */}
+                  <div className="md:w-[60%] p-8 flex flex-col justify-center">
+                    <div className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mb-6">
+                      <value.icon className="w-8 h-8 text-primary" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                      {value.title}
+                    </h3>
+                    <p className="text-lg text-gray-600 dark:text-gray-300">
+                      {value.description}
+                    </p>
+                  </div>
+
+                  {/* Image */}
+                  <div className="md:w-[40%] h-48 md:h-auto overflow-hidden flex items-center">
+                    <img
+                      src={value.image}
+                      alt={value.title}
+                      className="w-full h-full object-cover"
+                      style={{ objectPosition: "center" }}
+                    />
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                  {value.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300">
-                  {value.description}
-                </p>
               </div>
             ))}
           </div>
@@ -222,7 +272,10 @@ const About = () => {
       </section>
 
       {/* Boards */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-800">
+      <section
+        className="py-20 bg-gray-50 dark:bg-gray-800 animate-fade-in"
+        ref={useIntersectionObserver()}
+      >
         <div className="container">
           <h2 className="section-title text-center mb-4">
             Our Governance Structure
@@ -234,20 +287,29 @@ const About = () => {
             {boards.map((board, index) => (
               <div
                 key={index}
-                className={`${
-                  index % 2 === 0 ? "reveal-left" : "reveal-right"
-                } reveal-delay-${
-                  index * 100
-                } bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow animate-fade-in`}
+                className="bg-white dark:bg-gray-700 rounded-xl shadow-lg hover:shadow-xl transition-shadow animate-fade-in overflow-hidden"
                 style={{ animationDelay: `${index * 0.1}s` }}
                 ref={useIntersectionObserver()}
               >
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                  {board.name}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300">
-                  {board.description}
-                </p>
+                {/* Image */}
+                <div className="h-48 overflow-hidden">
+                  <img
+                    src={board.image}
+                    alt={board.name}
+                    className="w-full h-full object-cover scale-110 hover:scale-125 transition-transform duration-300"
+                    style={{ objectPosition: "top" }}
+                  />
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                    {board.name}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    {board.description}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
@@ -276,7 +338,8 @@ const About = () => {
                       <img
                         src={member.photo.url}
                         alt={member.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-500"
+                        style={{ objectPosition: "top" }}
                       />
                     </div>
                   ) : (

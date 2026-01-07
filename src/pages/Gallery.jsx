@@ -412,8 +412,19 @@ const Gallery = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-primary to-secondary text-white py-20">
-        <div className="absolute inset-0 bg-black/20"></div>
+      <section className="relative text-white py-20 overflow-hidden">
+        {/* Blurred Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: "url(/WhoWeAre.jpg)",
+            filter: "blur(3px)",
+            transform: "scale(1.1)",
+          }}
+        />
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/75 via-primary/65 to-secondary/75" />
+
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
             <ImageIcon className="w-16 h-16 mx-auto mb-6" />
@@ -506,7 +517,7 @@ const Gallery = () => {
                     <img
                       src={image.url}
                       alt={image.title}
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-cover scale-110"
                       loading="lazy"
                       onLoad={() => handleImageLoad(image.id)}
                     />

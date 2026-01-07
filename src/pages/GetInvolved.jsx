@@ -93,8 +93,20 @@ const GetInvolved = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-secondary text-white py-16">
-        <div className="container text-center">
+      <section className="relative text-white py-16 overflow-hidden">
+        {/* Blurred Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: "url(/JoinUs.jpg)",
+            filter: "blur(3px)",
+            transform: "scale(1.1)",
+          }}
+        />
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/75 via-primary/65 to-secondary/75" />
+
+        <div className="container text-center relative z-10">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in">
             Get Involved
           </h1>
@@ -108,24 +120,41 @@ const GetInvolved = () => {
       </section>
 
       {/* Ways to Get Involved */}
-      <section className="py-20 dark:bg-gray-900">
+      <section
+        className="py-20 dark:bg-gray-900 animate-fade-in"
+        ref={useIntersectionObserver()}
+      >
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-8">
             {ways.map((way, index) => (
               <div
                 key={index}
-                className={`${
-                  index % 2 === 0 ? "reveal-left" : "reveal-right"
-                } reveal-delay-${
-                  index * 100
-                } bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all animate-fade-in`}
+                className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
                 ref={useIntersectionObserver()}
               >
                 <div
-                  className={`h-32 bg-gradient-to-br ${way.color} flex items-center justify-center`}
+                  className={`h-32 bg-gradient-to-br ${way.color} flex items-center justify-center relative overflow-hidden`}
                 >
-                  <way.icon className="w-16 h-16 text-white" />
+                  {/* Background Image with blur */}
+                  <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{
+                      backgroundImage: `url(/${
+                        [
+                          "Impact1.jpg",
+                          "Impact2.jpg",
+                          "Impact3.jpg",
+                          "JoinUs.jpg",
+                        ][index]
+                      })`,
+                      filter: "blur(2px)",
+                    }}
+                  />
+                  {/* Color Overlay with reduced opacity */}
+                  <div className={`absolute inset-0 ${way.color} opacity-60`} />
+                  {/* Icon */}
+                  <way.icon className="w-16 h-16 text-white relative z-10" />
                 </div>
                 <div className="p-8">
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
@@ -161,7 +190,10 @@ const GetInvolved = () => {
       </section>
 
       {/* Volunteer Opportunities */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-800">
+      <section
+        className="py-20 bg-gray-50 dark:bg-gray-800 animate-fade-in"
+        ref={useIntersectionObserver()}
+      >
         <div className="container">
           <h2 className="section-title text-center mb-4">
             Volunteer Opportunities
@@ -173,11 +205,7 @@ const GetInvolved = () => {
             {volunteerOpportunities.map((opp, index) => (
               <div
                 key={index}
-                className={`${
-                  index % 2 === 0 ? "reveal-left" : "reveal-right"
-                } reveal-delay-${
-                  index * 100
-                } bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow animate-fade-in`}
+                className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
                 ref={useIntersectionObserver()}
               >
@@ -205,7 +233,10 @@ const GetInvolved = () => {
       </section>
 
       {/* Corporate Partnerships */}
-      <section className="py-20 dark:bg-gray-900">
+      <section
+        className="py-20 dark:bg-gray-900 animate-fade-in"
+        ref={useIntersectionObserver()}
+      >
         <div className="container">
           <div className="max-w-4xl mx-auto text-center">
             <Building2 className="w-16 h-16 text-primary mx-auto mb-6" />
@@ -219,7 +250,7 @@ const GetInvolved = () => {
             </p>
             <div className="grid md:grid-cols-3 gap-6 mb-8">
               <div
-                className="reveal-left bg-gray-50 dark:bg-gray-800 p-6 rounded-xl"
+                className="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl"
                 ref={useIntersectionObserver()}
               >
                 <h4 className="font-bold text-gray-900 dark:text-white mb-2">
@@ -230,7 +261,7 @@ const GetInvolved = () => {
                 </p>
               </div>
               <div
-                className="reveal-scale reveal-delay-100 bg-gray-50 dark:bg-gray-800 p-6 rounded-xl"
+                className="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl"
                 ref={useIntersectionObserver()}
               >
                 <h4 className="font-bold text-gray-900 dark:text-white mb-2">
@@ -241,7 +272,7 @@ const GetInvolved = () => {
                 </p>
               </div>
               <div
-                className="reveal-right reveal-delay-200 bg-gray-50 dark:bg-gray-800 p-6 rounded-xl"
+                className="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl"
                 ref={useIntersectionObserver()}
               >
                 <h4 className="font-bold text-gray-900 dark:text-white mb-2">
@@ -261,14 +292,14 @@ const GetInvolved = () => {
       </section>
 
       {/* Impact of Involvement */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-800">
+      <section
+        className="py-20 bg-gray-50 dark:bg-gray-800 animate-fade-in"
+        ref={useIntersectionObserver()}
+      >
         <div className="container">
           <h2 className="section-title text-center mb-12">Your Impact</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div
-              className="reveal-left text-center"
-              ref={useIntersectionObserver()}
-            >
+            <div className="text-center" ref={useIntersectionObserver()}>
               <div className="text-5xl font-bold text-primary mb-2">₹500</div>
               <div className="text-gray-900 dark:text-white font-semibold mb-2">
                 Monthly Donation

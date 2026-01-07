@@ -90,8 +90,20 @@ const Impact = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-secondary text-white py-16">
-        <div className="container text-center">
+      <section className="relative text-white py-16 overflow-hidden">
+        {/* Blurred Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: "url(/AboutHeader1.jpg)",
+            filter: "blur(3px)",
+            transform: "scale(1.1)",
+          }}
+        />
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/75 via-primary/65 to-secondary/75" />
+
+        <div className="container text-center relative z-10">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in">
             Our Impact
           </h1>
@@ -105,7 +117,10 @@ const Impact = () => {
       </section>
 
       {/* Impact Stats */}
-      <section className="py-20 dark:bg-gray-900">
+      <section
+        className="py-20 dark:bg-gray-900 animate-fade-in"
+        ref={useIntersectionObserver()}
+      >
         <div className="container">
           <h2 className="section-title text-center mb-12">Impact By Numbers</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -153,8 +168,17 @@ const Impact = () => {
                 style={{ animationDelay: `${index * 0.1}s` }}
                 ref={useIntersectionObserver()}
               >
-                <div className="h-48 bg-gradient-to-br from-primary/20 to-secondary/20 dark:from-primary/30 dark:to-secondary/30 flex items-center justify-center">
-                  <story.icon className="w-24 h-24 text-primary" />
+                <div className="h-48 relative overflow-hidden flex items-center justify-center">
+                  {/* Background Image with blur */}
+                  <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{
+                      backgroundImage: `url(/Impact${index + 1}.jpg)`,
+                      filter: "blur(2px)",
+                    }}
+                  />
+                  {/* Icon */}
+                  <story.icon className="w-24 h-24 text-white z-[2] relative drop-shadow-lg" />
                 </div>
                 <div className="p-6">
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -329,8 +353,20 @@ const Impact = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-r from-primary to-secondary text-white">
-        <div className="container text-center">
+      <section className="py-20 text-white relative overflow-hidden">
+        {/* Blurred Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: "url(/JoinUs.jpg)",
+            filter: "blur(3px)",
+            transform: "scale(1.1)",
+          }}
+        />
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/75 via-primary/65 to-secondary/75" />
+
+        <div className="container text-center relative z-10">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Be Part of This Impact
           </h2>

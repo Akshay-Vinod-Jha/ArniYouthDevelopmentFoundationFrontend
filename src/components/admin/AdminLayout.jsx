@@ -32,8 +32,8 @@ const AdminLayout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="flex relative">
+    <div className="h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden">
+      <div className="flex h-full relative">
         {/* Mobile Overlay */}
         {isSidebarOpen && (
           <div
@@ -46,9 +46,9 @@ const AdminLayout = () => {
         <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col w-full lg:w-auto">
+        <div className="flex-1 flex flex-col w-full lg:w-auto overflow-hidden">
           {/* Admin Top Header */}
-          <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-4 sticky top-0 z-10">
+          <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-4 flex-shrink-0">
             <div className="flex items-center justify-between">
               {/* Mobile Menu Button and Title */}
               <div className="flex items-center gap-3">
@@ -105,7 +105,7 @@ const AdminLayout = () => {
           </header>
 
           {/* Page Content */}
-          <main className="flex-1 p-4 sm:p-6 overflow-auto bg-gray-50 dark:bg-gray-900">
+          <main className="flex-1 p-4 sm:p-6 overflow-hidden bg-gray-50 dark:bg-gray-900 flex flex-col">
             <Outlet />
           </main>
         </div>

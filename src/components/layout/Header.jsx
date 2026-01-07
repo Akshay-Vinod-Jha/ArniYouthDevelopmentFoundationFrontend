@@ -1,6 +1,22 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Heart, Sun, Moon, Shield } from "lucide-react";
+import {
+  Menu,
+  X,
+  Heart,
+  Sun,
+  Moon,
+  Shield,
+  Home,
+  Info,
+  Briefcase,
+  TrendingUp,
+  Users,
+  MapPin,
+  FileText,
+  Image,
+  Mail,
+} from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 
 const Header = () => {
@@ -8,15 +24,15 @@ const Header = () => {
   const { theme, toggleTheme } = useTheme();
 
   const navigation = [
-    { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
-    { name: "Programs", href: "/programs" },
-    { name: "Impact", href: "/impact" },
-    { name: "Get Involved", href: "/get-involved" },
-    { name: "Village Community", href: "/village-community" },
-    { name: "Blog", href: "/blog" },
-    { name: "Gallery", href: "/gallery" },
-    { name: "Contact", href: "/contact" },
+    { name: "Home", href: "/", icon: Home },
+    { name: "About", href: "/about", icon: Info },
+    { name: "Programs", href: "/programs", icon: Briefcase },
+    { name: "Impact", href: "/impact", icon: TrendingUp },
+    { name: "Get Involved", href: "/get-involved", icon: Users },
+    { name: "Village Community", href: "/village-community", icon: MapPin },
+    { name: "Blog", href: "/blog", icon: FileText },
+    { name: "Gallery", href: "/gallery", icon: Image },
+    { name: "Contact", href: "/contact", icon: Mail },
   ];
 
   return (
@@ -43,16 +59,25 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-6">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors font-medium"
-              >
-                {item.name}
-              </Link>
-            ))}
+          <div className="hidden lg:flex items-center gap-2">
+            {navigation.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="group relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  title={item.name}
+                >
+                  <Icon className="w-5 h-5 text-gray-700 dark:text-gray-300 group-hover:text-primary dark:group-hover:text-primary transition-colors" />
+                  {/* Tooltip */}
+                  <span className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-md whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none z-50">
+                    {item.name}
+                    <span className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900 dark:border-b-gray-700"></span>
+                  </span>
+                </Link>
+              );
+            })}
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -66,14 +91,21 @@ const Header = () => {
             </button>
             <Link
               to="/admin/login"
-              className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg transition-colors"
+              className="group relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               title="Admin Panel"
             >
-              <Shield className="w-4 h-4" />
-              <span className="text-sm font-medium">Admin</span>
+              <Shield className="w-5 h-5 text-gray-700 dark:text-gray-300 group-hover:text-primary dark:group-hover:text-primary transition-colors" />
+              <span className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-md whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none z-50">
+                Admin Panel
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900 dark:border-b-gray-700"></span>
+              </span>
             </Link>
-            <Link to="/donate" className="btn btn-primary">
-              Donate Now
+            <Link
+              to="/donate"
+              className="btn btn-primary flex items-center gap-2"
+            >
+              <Heart className="w-4 h-4" />
+              <span>Donate</span>
             </Link>
           </div>
 

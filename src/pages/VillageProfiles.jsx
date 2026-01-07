@@ -82,8 +82,20 @@ const VillageProfiles = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary to-yellow-500 text-white py-12 sm:py-16">
-        <div className="container mx-auto px-4">
+      <div className="relative text-white py-12 sm:py-16 overflow-hidden">
+        {/* Blurred Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: "url(/WhoWeAre.jpg)",
+            filter: "blur(3px)",
+            transform: "scale(1.1)",
+          }}
+        />
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/75 via-primary/65 to-secondary/75" />
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
               Village Community Directory
@@ -96,7 +108,7 @@ const VillageProfiles = () => {
       </div>
 
       {/* Search and Filters */}
-      <div className="container mx-auto px-4 -mt-6 sm:-mt-8 mb-8">
+      <div className="container mx-auto px-4 -mt-6 sm:-mt-8 mb-8 relative z-20">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row gap-3">
@@ -265,7 +277,7 @@ const VillageProfiles = () => {
                       <img
                         src={profile.photo}
                         alt={profile.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover scale-110"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">

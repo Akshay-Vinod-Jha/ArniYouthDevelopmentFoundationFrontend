@@ -123,9 +123,9 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="flex flex-col h-full gap-4 sm:gap-6 overflow-y-auto">
       {/* Header */}
-      <div>
+      <div className="flex-shrink-0">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
           Dashboard
         </h1>

@@ -255,8 +255,8 @@ const BoardManagement = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="flex flex-col h-full gap-6">
+      <div className="flex justify-between items-center flex-shrink-0">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Board Management
@@ -349,12 +349,14 @@ const BoardManagement = () => {
         </div>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={filteredMembers}
-        loading={loading}
-        emptyMessage="No board members found"
-      />
+      <div className="flex-1 overflow-hidden">
+        <DataTable
+          columns={columns}
+          data={members}
+          loading={loading}
+          emptyMessage="No board members found"
+        />
+      </div>
 
       <FormModal
         isOpen={showModal}

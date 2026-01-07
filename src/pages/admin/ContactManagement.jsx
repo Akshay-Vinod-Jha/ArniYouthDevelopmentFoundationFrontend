@@ -183,8 +183,8 @@ const ContactManagement = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="flex flex-col h-full gap-6">
+      <div className="flex justify-between items-center flex-shrink-0">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Contact Management
@@ -270,12 +270,14 @@ const ContactManagement = () => {
         </div>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={filteredContacts}
-        loading={loading}
-        emptyMessage="No contact messages found"
-      />
+      <div className="flex-1 overflow-hidden">
+        <DataTable
+          columns={columns}
+          data={contacts}
+          loading={loading}
+          emptyMessage="No contact messages found"
+        />
+      </div>
 
       {/* Detail Modal */}
       {showDetailModal && selectedContact && (

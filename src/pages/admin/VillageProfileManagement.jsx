@@ -297,9 +297,9 @@ const VillageProfileManagement = () => {
   ];
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="flex flex-col h-full gap-4 sm:gap-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 flex-shrink-0">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             Village Profiles
@@ -421,12 +421,14 @@ const VillageProfileManagement = () => {
       </div>
 
       {/* Data Table */}
-      <DataTable
-        columns={columns}
-        data={profiles}
-        loading={loading}
-        emptyMessage="No profiles found"
-      />
+      <div className="flex-1 overflow-hidden">
+        <DataTable
+          columns={columns}
+          data={profiles}
+          loading={loading}
+          emptyMessage="No profiles found"
+        />
+      </div>
 
       {/* Form Modal */}
       <FormModal
