@@ -141,24 +141,27 @@ const Footer = () => {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2">
                 <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span>Arni, Tiruvannamalai District, Tamil Nadu, India</span>
+                <span>
+                  Shantinath Agro Agencies, Mahur Road, Arni, District:
+                  Yavatmal, Maharashtra - 445103
+                </span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-5 h-5 text-primary" />
                 <a
-                  href="tel:+919876543210"
+                  href="tel:+919955545050"
                   className="hover:text-primary transition-colors"
                 >
-                  +91 98765 43210
+                  +91 99555 45050
                 </a>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-5 h-5 text-primary" />
                 <a
-                  href="mailto:info@aydfindia.org"
+                  href="mailto:contact@aydf.org"
                   className="hover:text-primary transition-colors"
                 >
-                  info@aydfindia.org
+                  contact@aydf.org
                 </a>
               </li>
             </ul>

@@ -491,7 +491,7 @@ const ProgramManagement = () => {
               value={formData.location}
               onChange={handleInputChange}
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder="e.g., Arni, Tamil Nadu"
+              placeholder="e.g., Arni, Yavatmal District, Maharashtra"
             />
           </div>
 

@@ -19,25 +19,25 @@ const Impact = () => {
     {
       icon: Users,
       label: "Lives Impacted",
-      value: "10,000+",
+      value: "1,000+",
       color: "text-blue-600",
     },
     {
       icon: Heart,
       label: "Blood Units Donated",
-      value: "2,500+",
+      value: "150+",
       color: "text-red-600",
     },
     {
       icon: TrendingUp,
       label: "Active Programs",
-      value: "15+",
+      value: "8",
       color: "text-green-600",
     },
     {
       icon: Award,
-      label: "Years of Service",
-      value: "5+",
+      label: "Months of Service",
+      value: "3",
       color: "text-purple-600",
     },
   ];
@@ -46,23 +46,31 @@ const Impact = () => {
     {
       title: "Healthcare Access Improved",
       description:
-        "Through our medical equipment bank, over 500 families received essential medical equipment including wheelchairs, oxygen cylinders, and hospital beds at no cost.",
+        "Through our medical equipment bank, families received essential medical equipment including wheelchairs, oxygen cylinders, and hospital beds at no cost.",
       icon: Building2,
-      stats: ["500+ Families", "1,200+ Equipment Items", "24/7 Availability"],
+      stats: [
+        "50+ Families Served",
+        "100+ Equipment Items",
+        "24/7 Availability",
+      ],
     },
     {
       title: "Education Transformed",
       description:
-        "Our scholarship program has helped 300+ students from rural areas continue their education, with 95% successfully completing their studies.",
+        "Our scholarship program has begun helping students from rural areas continue their education through connections with donors and CSR partnerships.",
       icon: GraduationCap,
-      stats: ["300+ Scholarships", "95% Success Rate", "25 Schools Partnered"],
+      stats: [
+        "20+ Student Beneficiaries",
+        "5 Schools Partnered",
+        "Growing Network",
+      ],
     },
     {
       title: "Community Development",
       description:
-        "Environmental initiatives have cleaned 40+ dumping grounds and improved infrastructure in 15+ villages, benefiting over 5,000 residents.",
+        "Environmental initiatives have begun addressing dumping grounds and infrastructure improvements in villages, benefiting local residents.",
       icon: Sprout,
-      stats: ["40+ Clean-ups", "15+ Villages", "5,000+ Beneficiaries"],
+      stats: ["5+ Clean-up Drives", "3+ Villages", "500+ Beneficiaries"],
     },
   ];
 
@@ -261,8 +269,8 @@ const Impact = () => {
                     Primary Focus Areas
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    Based in Arni, Tiruvannamalai District, Tamil Nadu, our
-                    programs reach across the district and neighboring regions.
+                    Based in Arni, Yavatmal District, Maharashtra, our programs
+                    reach across the Arni Taluka and neighboring regions.
                   </p>
                 </div>
               </div>
@@ -272,7 +280,7 @@ const Impact = () => {
                     Villages Covered
                   </h4>
                   <p className="text-gray-600 dark:text-gray-300">
-                    25+ villages in Tiruvannamalai District
+                    Villages across Arni Taluka, Yavatmal District
                   </p>
                 </div>
                 <div className="border-l-4 border-secondary pl-4">
@@ -297,31 +305,24 @@ const Impact = () => {
             <div className="space-y-8">
               {[
                 {
-                  year: "2019",
+                  year: "October 2025",
                   event:
-                    "Foundation established with first blood donation camp",
+                    "AYDF officially founded on October 23, 2025, with a vision to serve rural communities in Arni Taluka",
                 },
                 {
-                  year: "2020",
+                  year: "November 2025",
                   event:
-                    "Medical equipment bank launched, first scholarships awarded",
+                    "First blood donation camp organized in partnership with Yavatmal and Nagpur blood banks, Medical equipment support program initiated",
                 },
                 {
-                  year: "2021",
-                  event: "Expanded to 10+ villages, 100+ volunteers joined",
-                },
-                {
-                  year: "2022",
+                  year: "December 2025",
                   event:
-                    "Social justice board formed, legal awareness programs started",
+                    "Scholarship connections established, first students supported through CSR partnerships",
                 },
                 {
-                  year: "2023",
-                  event: "Reached 5,000+ lives, 25 schools partnered",
-                },
-                {
-                  year: "2024",
-                  event: "10,000+ lives impacted, 500+ active volunteers",
+                  year: "January 2026",
+                  event:
+                    "Growing volunteer network, expanding programs across healthcare, education, rural development, and social justice",
                 },
               ].map((milestone, index) => (
                 <div
@@ -333,7 +334,7 @@ const Impact = () => {
                     <div className="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-bold">
                       <Calendar className="w-6 h-6" />
                     </div>
-                    {index < 5 && (
+                    {index < 3 && (
                       <div className="w-1 h-full bg-primary/20 mt-2"></div>
                     )}
                   </div>

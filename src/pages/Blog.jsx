@@ -50,12 +50,12 @@ const Blog = () => {
   const blogPosts = [
     {
       id: 1,
-      title: "Transforming Rural Healthcare: A Year of Impact",
+      title: "AYDF Launches: A New Hope for Arni's Rural Communities",
       excerpt:
-        "Discover how our mobile health clinics have reached over 10,000 patients in remote villages, providing essential medical care and preventive health education.",
-      author: "Dr. Priya Sharma",
-      date: "November 28, 2024",
-      category: "Healthcare",
+        "On October 23, 2025, Arni Youth Development Foundation was officially founded with a mission to bridge gaps in healthcare, education, and rural development in Yavatmal District.",
+      author: "Gopal Kothari",
+      date: "October 25, 2025",
+      category: "Announcements",
       image:
         "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800",
       readTime: "5 min read",
@@ -63,12 +63,12 @@ const Blog = () => {
     },
     {
       id: 2,
-      title: "Education for All: Breaking Barriers in Rural India",
+      title: "First Blood Donation Camp: A Successful Beginning",
       excerpt:
-        "Learn about our scholarship program that has enabled 500+ underprivileged children to pursue their dreams through quality education and mentorship.",
-      author: "Rajesh Kumar",
-      date: "November 25, 2024",
-      category: "Education",
+        "AYDF's inaugural blood donation camp in partnership with Yavatmal and Nagpur blood banks collected 50+ units, marking a strong start to our healthcare initiatives.",
+      author: "Healthcare Board",
+      date: "November 15, 2025",
+      category: "Healthcare",
       image:
         "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800",
       readTime: "4 min read",
@@ -76,12 +76,12 @@ const Blog = () => {
     },
     {
       id: 3,
-      title: "Community Workshop: Digital Literacy Program Success",
+      title: "Building Our Foundation: The First Month's Journey",
       excerpt:
-        "Our 3-month digital literacy initiative empowered 200 women in rural areas with essential computer skills, opening new opportunities for economic independence.",
-      author: "Anjali Verma",
-      date: "November 20, 2024",
-      category: "Events",
+        "Reflections on our first month of operations, establishing our five specialized boards, and beginning to make an impact in Arni Taluka communities.",
+      author: "AYDF Team",
+      date: "November 20, 2025",
+      category: "Updates",
       image:
         "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800",
       readTime: "6 min read",
@@ -89,75 +89,76 @@ const Blog = () => {
     },
     {
       id: 4,
-      title: "From Farmer to Entrepreneur: Ravi's Inspiring Journey",
+      title: "Medical Equipment Bank Launched: Supporting Families in Need",
       excerpt:
-        "Meet Ravi, whose life changed when AYDF's skill development program helped him start his own organic farming business, now employing 15 local youth.",
-      author: "Meera Patel",
-      date: "November 15, 2024",
-      category: "Success Stories",
+        "AYDF establishes medical equipment support program, providing wheelchairs, hospital beds, and essential medical equipment to families at no cost.",
+      author: "Healthcare Board",
+      date: "December 5, 2025",
+      category: "Healthcare",
       image:
         "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=800",
-      readTime: "7 min read",
+      readTime: "5 min read",
       featured: false,
     },
     {
       id: 5,
-      title: "Building Sustainable Communities Through Clean Water",
+      title:
+        "Education Initiatives Begin: Connecting Students with Opportunities",
       excerpt:
-        "How our water purification project provided clean drinking water to 12 villages, dramatically reducing waterborne diseases and improving quality of life.",
-      author: "Dr. Amit Singh",
-      date: "November 10, 2024",
-      category: "Community",
+        "Our Education Board launches scholarship connection program, building bridges between rural students, donors, and CSR partners for educational support.",
+      author: "Education Board",
+      date: "December 15, 2025",
+      category: "Education",
       image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800",
-      readTime: "5 min read",
+      readTime: "4 min read",
       featured: false,
     },
     {
       id: 6,
-      title: "Annual Fundraiser 2024: Record-Breaking Support",
+      title: "Calling the Arni Diaspora: Give Back to Your Matrubhumi",
       excerpt:
-        "Thank you to our incredible donors! This year's fundraiser raised ₹2.5 crore, enabling us to expand our programs and reach 50,000 more beneficiaries.",
-      author: "AYDF Team",
-      date: "November 5, 2024",
+        "A message to all sons and daughters of Arni living across India and the globe - your homeland needs your expertise, networks, and support to transform rural communities.",
+      author: "Gopal Kothari",
+      date: "December 20, 2025",
       category: "Announcements",
       image: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800",
-      readTime: "3 min read",
-      featured: false,
-    },
-    {
-      id: 7,
-      title: "Women Empowerment: Vocational Training Success",
-      excerpt:
-        "Our tailoring and handicraft training program graduated 150 women this year, with 80% now earning sustainable income from their newfound skills.",
-      author: "Sunita Devi",
-      date: "October 30, 2024",
-      category: "Success Stories",
-      image:
-        "https://images.unsplash.com/photo-1509099863731-ef4bff19e808?w=800",
       readTime: "6 min read",
       featured: false,
     },
     {
-      id: 8,
-      title: "Mental Health Awareness: Breaking the Stigma",
+      id: 7,
+      title: "Environmental Action: First Clean-Up Drive Success",
       excerpt:
-        "Our mental health counseling initiative in schools has helped 300+ students cope with anxiety and stress through professional support and peer groups.",
-      author: "Dr. Kavita Reddy",
-      date: "October 25, 2024",
-      category: "Healthcare",
+        "AYDF volunteers organize successful environmental clean-up addressing dumping ground issues in local villages, engaging youth in community development.",
+      author: "Rural Development Board",
+      date: "December 28, 2025",
+      category: "Community",
       image:
-        "https://images.unsplash.com/photo-1527689368864-3a821dbccc34?w=800",
+        "https://images.unsplash.com/photo-1509099863731-ef4bff19e808?w=800",
       readTime: "5 min read",
       featured: false,
     },
     {
-      id: 9,
-      title: "STEM Education: Inspiring Young Scientists",
+      id: 8,
+      title: "Three Months In: Growing Strong Together",
       excerpt:
-        "Our science lab initiative brought hands-on learning to 20 rural schools, sparking curiosity and passion for STEM subjects among 2,000+ students.",
-      author: "Prof. Arun Mehta",
-      date: "October 20, 2024",
-      category: "Education",
+        "As we complete our first quarter, we reflect on achievements, lessons learned, and our vision for expanding impact across Arni Taluka in 2026.",
+      author: "AYDF Team",
+      date: "January 5, 2026",
+      category: "Updates",
+      image:
+        "https://images.unsplash.com/photo-1527689368864-3a821dbccc34?w=800",
+      readTime: "7 min read",
+      featured: false,
+    },
+    {
+      id: 9,
+      title: "Legal Support Initiative: Empowering Through Awareness",
+      excerpt:
+        "Our Social Justice Board begins providing legal guidance and rights awareness to marginalized communities, helping families understand their legal rights.",
+      author: "Social Justice Board",
+      date: "January 3, 2026",
+      category: "Social Justice",
       image:
         "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800",
       readTime: "4 min read",
@@ -165,11 +166,11 @@ const Blog = () => {
     },
     {
       id: 10,
-      title: "Disaster Relief: Supporting Flood-Affected Families",
+      title: "Infrastructure Development: Addressing Local Issues",
       excerpt:
-        "AYDF's rapid response team provided emergency relief supplies and temporary shelter to 500 families affected by recent floods in Bihar.",
-      author: "Relief Team",
-      date: "October 15, 2024",
+        "AYDF's Rural Development Board initiates work on addressing dumping ground issues and minor infrastructure concerns in partnership with local bodies.",
+      author: "Rural Development Board",
+      date: "December 18, 2025",
       category: "Community",
       image:
         "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800",
@@ -178,25 +179,25 @@ const Blog = () => {
     },
     {
       id: 11,
-      title: "Sports for Development: Youth Football League Launch",
+      title: "Volunteer Network Growing: Join the Movement",
       excerpt:
-        "Our new football league engages 500 youth from 15 villages, promoting fitness, teamwork, and discipline while keeping them away from negative influences.",
-      author: "Coach Ramesh",
-      date: "October 10, 2024",
-      category: "Events",
+        "Our volunteer network continues to expand as more community members join hands to serve Arni Taluka. Currently seeking volunteers for upcoming programs.",
+      author: "Outreach Board",
+      date: "December 22, 2025",
+      category: "Announcements",
       image:
         "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
-      readTime: "5 min read",
+      readTime: "3 min read",
       featured: false,
     },
     {
       id: 12,
-      title: "Nutrition Program: Fighting Malnutrition in Children",
+      title: "Looking Ahead: Vision for 2026",
       excerpt:
-        "Our mid-day meal enhancement program has improved nutritional status of 3,000 school children with balanced meals and nutrition education.",
-      author: "Nutritionist Team",
-      date: "October 5, 2024",
-      category: "Healthcare",
+        "As we enter 2026, AYDF outlines ambitious plans for expanding our healthcare, education, and community development initiatives across Arni Taluka.",
+      author: "AYDF Team",
+      date: "January 1, 2026",
+      category: "Updates",
       image:
         "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800",
       readTime: "6 min read",

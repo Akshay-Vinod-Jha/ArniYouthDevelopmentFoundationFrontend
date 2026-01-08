@@ -185,25 +185,28 @@ const About = () => {
                 {/* Text Content - 2 columns */}
                 <div className="md:col-span-2">
                   <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-                    Founded with the spirit of "Matrubhumi" (motherland), Arni
-                    Youth Development Foundation was born from a deep commitment
-                    to serve rural communities in Tamil Nadu. What started as a
-                    small group of dedicated volunteers has grown into a
-                    comprehensive organization making a tangible impact across
-                    multiple sectors.
+                    Founded on October 23, 2025, with the spirit of "Matrubhumi"
+                    (motherland), Arni Youth Development Foundation was born
+                    from a deep commitment to serve rural communities in
+                    Yavatmal District, Maharashtra. What started as a vision to
+                    bridge gaps in healthcare, education, and development has
+                    begun making a tangible impact across the Arni Taluka
+                    region.
                   </p>
                   <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-                    Our journey began with blood donation camps and has expanded
-                    to include medical equipment banks, educational
-                    scholarships, infrastructure development, and legal support
-                    services. Each program is designed to address real community
-                    needs and create lasting positive change.
+                    Our journey began with blood donation camps in partnership
+                    with Yavatmal and Nagpur blood banks, and has expanded to
+                    include medical equipment support, educational scholarships
+                    through CSR partnerships, infrastructure development, and
+                    legal support services. Each program is designed to address
+                    real community needs and create lasting positive change.
                   </p>
                   <p className="text-lg text-gray-600 dark:text-gray-300">
-                    Today, we're proud to have impacted over 10,000 lives
-                    through our various initiatives, supported by a network of
-                    500+ volunteers and governed by five specialized boards
-                    ensuring excellence across all our programs.
+                    In just three months since our founding, we have begun
+                    impacting lives through our various initiatives, supported
+                    by a growing network of dedicated volunteers and governed by
+                    five specialized boards ensuring excellence across all our
+                    programs.
                   </p>
                 </div>
 
@@ -216,6 +219,82 @@ const About = () => {
                     style={{ objectPosition: "top" }}
                   />
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Founder's Message */}
+      <section
+        className="py-20 bg-gradient-to-br from-primary/5 to-secondary/5 dark:bg-gray-800 animate-fade-in"
+        ref={useIntersectionObserver()}
+      >
+        <div className="container">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="section-title mb-4">Message from Our Founder</h2>
+              <p className="text-xl text-gray-600 dark:text-gray-400">
+                Pankaj alias Gopal Kantilal Kothari
+              </p>
+              <p className="text-lg text-primary dark:text-primary/80 font-medium">
+                Founder & Visionary, AYDF
+              </p>
+            </div>
+            <div className="bg-white dark:bg-gray-700 p-8 md:p-12 rounded-2xl shadow-xl">
+              <div className="prose prose-lg max-w-none dark:prose-invert">
+                <p className="text-gray-700 dark:text-gray-300 mb-6 italic text-xl leading-relaxed">
+                  "AYDF was created with a simple yet powerful purpose—to ensure
+                  that every individual in our region has access to healthcare,
+                  education, justice, and the opportunities needed to live a
+                  dignified and progressive life."
+                </p>
+                <p className="text-gray-600 dark:text-gray-300 mb-6">
+                  My journey began in the streets of Arni, where I witnessed
+                  firsthand the incredible potential of our people. Those early
+                  years showed me a profound truth: the people of Arni do not
+                  lack talent, nor do they lack the ambition to succeed. What
+                  they lack are the fundamental pillars of support—resources,
+                  structured platforms, and the fair chance to thrive.
+                </p>
+                <p className="text-gray-600 dark:text-gray-300 mb-6">
+                  AYDF is our collective response to those gaps, built on a
+                  foundation of compassion, strategic structure, and an
+                  unwavering long-term commitment to social equity. We believe
+                  that progress is not a solo endeavor but a shared
+                  responsibility.
+                </p>
+                <p className="text-gray-600 dark:text-gray-300 mb-6">
+                  A major pillar of this mission is the incredible strength of
+                  the Arni diaspora—the sons and daughters of this soil who now
+                  live across India and the globe. You carry the spirit of Arni
+                  in your hearts, and today, your experience, expertise,
+                  influence, and financial contributions are the catalysts that
+                  strengthen AYDF's journey.
+                </p>
+                <div className="bg-primary/10 dark:bg-primary/20 p-6 rounded-lg my-8 border-l-4 border-primary">
+                  <p className="text-gray-700 dark:text-gray-300 font-semibold text-lg mb-2">
+                    To each of you, I extend a personal invitation:
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Give back to your Matrubhumi. Arni shaped the foundations of
+                    who you are today; now, you have the opportunity to
+                    transform the lives of those who still call it home.
+                  </p>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 mb-6">
+                  Our growth is fueled by integrity and transparency, guided by
+                  the dedicated hands of our volunteers and partners. We are not
+                  just running a foundation; we are building a legacy of
+                  empowerment.
+                </p>
+                <p className="text-gray-700 dark:text-gray-300 font-medium text-lg">
+                  Let us work together to turn this mission into a powerful
+                  movement, breaking down barriers and constructing a stronger,
+                  healthier, and more vibrant Arni for generations to come. Your
+                  involvement is the bridge between what Arni is today and what
+                  it can become tomorrow.
+                </p>
               </div>
             </div>
           </div>

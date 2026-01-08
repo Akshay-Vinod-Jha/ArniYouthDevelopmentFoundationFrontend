@@ -61,22 +61,29 @@ const Contact = () => {
     {
       icon: MapPin,
       title: "Address",
-      details: ["Arni, Tiruvannamalai District", "Tamil Nadu, India - 632301"],
+      details: [
+        "Shantinath Agro Agencies, Opp. Krushi Utpanna Bazar Samiti",
+        "Mahur Road, Arni, District: Yavatmal",
+        "Maharashtra, India - 445103",
+      ],
     },
     {
       icon: Phone,
       title: "Phone",
-      details: ["+91 98765 43210", "+91 98765 43211"],
+      details: ["+91 99555 45050"],
     },
     {
       icon: Mail,
       title: "Email",
-      details: ["info@aydfindia.org", "support@aydfindia.org"],
+      details: ["contact@aydf.org", "office@aydf.org"],
     },
     {
       icon: Clock,
       title: "Working Hours",
-      details: ["Monday - Saturday: 9 AM - 6 PM", "Sunday: Closed"],
+      details: [
+        "Monday - Saturday: 10:00 AM - 6:00 PM",
+        "Sunday: Closed (Emergency medical equipment requests accepted)",
+      ],
     },
   ];
 
@@ -277,7 +284,7 @@ const Contact = () => {
                         setFormData({ ...formData, phone: e.target.value })
                       }
                       className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:border-primary focus:outline-none"
-                      placeholder="9876543210"
+                      placeholder="9955545050"
                       pattern="[0-9]{10}"
                     />
                   </div>
@@ -381,17 +388,17 @@ const Contact = () => {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
                     <Phone className="w-5 h-5 text-primary" />
-                    <a href="tel:+919876543210" className="hover:text-primary">
-                      +91 98765 43210
+                    <a href="tel:+919955545050" className="hover:text-primary">
+                      +91 99555 45050
                     </a>
                   </div>
                   <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
                     <Mail className="w-5 h-5 text-primary" />
                     <a
-                      href="mailto:info@aydfindia.org"
+                      href="mailto:contact@aydf.org"
                       className="hover:text-primary"
                     >
-                      info@aydfindia.org
+                      contact@aydf.org
                     </a>
                   </div>
                 </div>
@@ -426,7 +433,7 @@ const Contact = () => {
               },
               {
                 q: "Where do you operate?",
-                a: "Our primary focus is Arni and surrounding areas in Tiruvannamalai District, Tamil Nadu, covering 25+ villages.",
+                a: "Our primary focus is Arni and surrounding areas in Yavatmal District, Maharashtra, covering the Arni Taluka region.",
               },
             ].map((faq, index) => (
               <details

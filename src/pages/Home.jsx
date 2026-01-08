@@ -109,10 +109,10 @@ const Home = () => {
   };
 
   const stats = [
-    { label: "Lives Impacted", value: "10,000+", icon: Users, suffix: "+" },
-    { label: "Active Volunteers", value: "500+", icon: Heart, suffix: "+" },
-    { label: "Programs Running", value: "15+", icon: TrendingUp, suffix: "+" },
-    { label: "Years of Service", value: "5+", icon: Award, suffix: "+" },
+    { label: "Lives Impacted", value: "1,000+", icon: Users, suffix: "+" },
+    { label: "Active Volunteers", value: "50+", icon: Heart, suffix: "+" },
+    { label: "Programs Running", value: "8", icon: TrendingUp, suffix: "" },
+    { label: "Months of Service", value: "3", icon: Award, suffix: "" },
   ];
 
   const programs = [
@@ -170,7 +170,8 @@ const Home = () => {
               </h1>
               <p className="text-xl md:text-2xl mb-8 text-white/90">
                 Empowering rural communities through healthcare, education, and
-                sustainable development in Arni and beyond.
+                sustainable development in Arni Taluka, Yavatmal District,
+                Maharashtra.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link
@@ -252,9 +253,10 @@ const Home = () => {
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
                 Arni Youth Development Foundation (AYDF) is a dedicated
                 organization working towards the holistic development of rural
-                communities in Tamil Nadu. Founded with a vision of "Matrubhumi"
-                (motherland), we focus on healthcare, education, rural
-                development, and social justice.
+                communities in Arni and Arni Taluka, Yavatmal District,
+                Maharashtra. Founded with a vision of "Matrubhumi" (motherland),
+                we focus on healthcare, education, rural development, and social
+                justice.
               </p>
               <p className="text-lg text-gray-600 mb-8">
                 Our mission is to create sustainable change by empowering youth,

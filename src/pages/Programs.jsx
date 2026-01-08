@@ -108,7 +108,7 @@ const Programs = () => {
         {
           name: "Blood Donation Camps",
           description:
-            "Regular blood donation camps in collaboration with district blood banks",
+            "Regular blood donation camps in partnership with Yavatmal and Nagpur district blood banks",
           icon: Droplet,
           image: "/ProgramsHealth1.jpg",
         },
@@ -135,9 +135,9 @@ const Programs = () => {
         },
       ],
       stats: [
-        { label: "Blood Units Collected", value: "2,500+" },
-        { label: "Patients Supported", value: "1,200+" },
-        { label: "Health Camps Organized", value: "50+" },
+        { label: "Blood Units Collected", value: "150+" },
+        { label: "Patients Supported", value: "50+" },
+        { label: "Health Camps Organized", value: "5+" },
       ],
     },
     {
@@ -169,9 +169,9 @@ const Programs = () => {
         },
       ],
       stats: [
-        { label: "Scholarships Awarded", value: "300+" },
-        { label: "Students Mentored", value: "2,000+" },
-        { label: "Schools Reached", value: "25+" },
+        { label: "Student Beneficiaries", value: "20+" },
+        { label: "Students Mentored", value: "100+" },
+        { label: "Schools Reached", value: "5+" },
       ],
     },
     {
@@ -203,9 +203,9 @@ const Programs = () => {
         },
       ],
       stats: [
-        { label: "Clean-up Drives", value: "40+" },
-        { label: "Infrastructure Projects", value: "15+" },
-        { label: "Volunteers Engaged", value: "800+" },
+        { label: "Clean-up Drives", value: "5+" },
+        { label: "Infrastructure Projects", value: "3+" },
+        { label: "Volunteers Engaged", value: "50+" },
       ],
     },
     {
@@ -231,9 +231,9 @@ const Programs = () => {
         },
       ],
       stats: [
-        { label: "Cases Supported", value: "150+" },
-        { label: "Awareness Sessions", value: "30+" },
-        { label: "Lives Empowered", value: "500+" },
+        { label: "Cases Supported", value: "10+" },
+        { label: "Awareness Sessions", value: "3+" },
+        { label: "Families Assisted", value: "25+" },
       ],
     },
   ];
