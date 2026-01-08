@@ -134,7 +134,7 @@ const Home = () => {
     },
     {
       icon: Building,
-      title: "Rural Development",
+      title: "City Development",
       description:
         "Infrastructure improvements, environmental initiatives, and community development.",
       color: "bg-green-100 text-green-600",
@@ -142,7 +142,7 @@ const Home = () => {
     },
     {
       icon: Scale,
-      title: "Social Justice",
+      title: "Legal Support",
       description:
         "Legal awareness, guidance for victims, and empowering disadvantaged communities.",
       color: "bg-purple-100 text-purple-600",
@@ -169,9 +169,8 @@ const Home = () => {
                 Building Better Communities Together
               </h1>
               <p className="text-xl md:text-2xl mb-8 text-white/90">
-                Empowering rural communities through healthcare, education, and
-                sustainable development in Arni Taluka, Yavatmal District,
-                Maharashtra.
+                Together, we can transform our mission into a movement. Join
+                hands for the betterment of the motherland.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link

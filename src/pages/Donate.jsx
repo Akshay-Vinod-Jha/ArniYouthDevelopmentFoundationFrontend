@@ -12,6 +12,7 @@ import {
   Sprout,
 } from "lucide-react";
 import Modal from "../components/ui/Modal";
+import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 
 const Donate = () => {
   const [amount, setAmount] = useState("");
