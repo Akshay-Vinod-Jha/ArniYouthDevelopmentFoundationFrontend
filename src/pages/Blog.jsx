@@ -224,6 +224,7 @@ const Blog = () => {
   const allBlogs = [
     ...dynamicBlogs.map((blog) => ({
       id: blog._id,
+      slug: blog.slug,
       title: blog.title,
       excerpt: blog.excerpt,
       author: blog.author?.name || "AYDF Team",
@@ -418,7 +419,7 @@ const Blog = () => {
                   </div>
 
                   <Link
-                    to={`/blog/${featuredPost.id}`}
+                    to={`/blog/${featuredPost.slug || featuredPost.id}`}
                     className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-lg font-semibold hover:from-primary/90 hover:to-secondary/90 transition-colors duration-300 w-fit"
                   >
                     Read Full Article
@@ -494,7 +495,7 @@ const Blog = () => {
                         </div>
 
                         <Link
-                          to={`/blog/${post.id}`}
+                          to={`/blog/${post.slug || post.id}`}
                           className="text-primary dark:text-primary hover:text-primary/80 dark:hover:text-primary/80 font-semibold text-sm flex items-center gap-1 group/link"
                         >
                           Read More
