@@ -43,7 +43,7 @@ const Header = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center overflow-hidden">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
               <img
                 src="/favicon.png"
                 alt="AYDF Logo"
