@@ -71,7 +71,7 @@ const VillageProfileManagement = () => {
 
       const response = await axios.get(
         `${API_URL}/village-profiles/admin/all`,
-        config
+        config,
       );
       console.log("Fetched profiles:", response.data);
       setProfiles(response.data.data || []);
@@ -104,7 +104,7 @@ const VillageProfileManagement = () => {
       submitData.append("bio", formData.bio);
       submitData.append(
         "contactDetails",
-        JSON.stringify(formData.contactDetails)
+        JSON.stringify(formData.contactDetails),
       );
       submitData.append("isActive", formData.isActive);
 
@@ -116,7 +116,7 @@ const VillageProfileManagement = () => {
         await axios.put(
           `${API_URL}/village-profiles/${editingProfile._id}`,
           submitData,
-          config
+          config,
         );
       } else {
         await axios.post(`${API_URL}/village-profiles`, submitData, config);
@@ -544,7 +544,6 @@ const VillageProfileManagement = () => {
               }
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               placeholder="Brief description about the person..."
-              maxLength="500"
             />
           </div>
 
@@ -646,8 +645,8 @@ const VillageProfileManagement = () => {
               {submitting
                 ? "Saving..."
                 : editingProfile
-                ? "Update Profile"
-                : "Add Profile"}
+                  ? "Update Profile"
+                  : "Add Profile"}
             </button>
             <button
               type="button"
