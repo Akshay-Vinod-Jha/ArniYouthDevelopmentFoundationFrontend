@@ -86,6 +86,14 @@ const Footer = () => {
                   Gallery
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/trustee"
+                  className="hover:text-primary transition-colors"
+                >
+                  Our Trustees
+                </Link>
+              </li>
             </ul>
           </div>
 

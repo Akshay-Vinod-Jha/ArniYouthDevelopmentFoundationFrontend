@@ -16,6 +16,7 @@ import {
   FileText,
   Image,
   Mail,
+  Award,
 } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 
@@ -29,6 +30,7 @@ const Header = () => {
     { name: "Programs", href: "/programs", icon: Briefcase },
     { name: "Impact", href: "/impact", icon: TrendingUp },
     { name: "Get Involved", href: "/get-involved", icon: Users },
+    { name: "Trustees", href: "/trustee", icon: Award },
     { name: "Village Community", href: "/village-community", icon: MapPin },
     { name: "Blog", href: "/blog", icon: FileText },
     { name: "Gallery", href: "/gallery", icon: Image },

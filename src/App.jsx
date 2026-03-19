@@ -13,6 +13,7 @@ import GetInvolved from "./pages/GetInvolved";
 import Donate from "./pages/Donate";
 import MembershipPage from "./pages/MembershipPage";
 import VolunteerPage from "./pages/VolunteerPage";
+import Trustee from "./pages/Trustee";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Gallery from "./pages/Gallery";
@@ -76,6 +77,7 @@ function App() {
                       <Route path="/donate" element={<Donate />} />
                       <Route path="/membership" element={<MembershipPage />} />
                       <Route path="/volunteer" element={<VolunteerPage />} />
+                      <Route path="/trustee" element={<Trustee />} />
                       <Route
                         path="/village-community"
                         element={<VillageProfiles />}
